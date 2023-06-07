@@ -1,4 +1,5 @@
 #include "GUIMyFrame1.h"
+#include "Frame.h"
 #include <vector>
 #include <fstream>
 #include <queue>
@@ -251,6 +252,22 @@ std::vector<Vector4> data;
   }
 
 
+
+
+int width = d_ptr->DrawingPanel->GetSize().GetX();
+int height = d_ptr->DrawingPanel->GetSize().GetY();
+
+std::vector<wxPoint> update;
+
+for(auto & obj : data)
+{
+    update.push_back(wxPoint( obj.X()/2. * width, obj.Z()/2. * height ));
+}
+d_ptr->setValues(update);
+d_ptr->Refresh();
+
+
+
 prepareData(data);
  }
 
@@ -344,7 +361,7 @@ bool GUIMyFrame1::transformator(Triangle & triangle, int w, int h)
     point = 
     matrix_Zrotate(WxSB_RotateZ->GetValue()*PI/180.) * //rotate
     matrix_Yrotate(WxSB_RotateY->GetValue()*PI/180.) *
-    matrix_Xrotate(WxSB_RotateX->GetValue()*PI/180.) * 
+    matrix_Xrotate(WxSB_RotateX->GetValue()*PI/180. + PI/2.) * 
     point;
 
 

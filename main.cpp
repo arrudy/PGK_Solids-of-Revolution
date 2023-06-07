@@ -18,9 +18,15 @@ bool MyApp::OnInit()
  SetProcessDPIAware();
  wxFrame *mainFrame = new GUIMyFrame1(NULL);
  wxFrame *drawFrame = new MyFrame(NULL);
- mainFrame->Show(true);
+
+reinterpret_cast<GUIMyFrame1*>(mainFrame)->set_d_ptr(reinterpret_cast<MyFrame*>(drawFrame));
+
+reinterpret_cast<MyFrame*>(drawFrame)->set_m_ptr(reinterpret_cast<GUIMyFrame1*>(mainFrame));
+
  drawFrame->Show(true);
+ mainFrame->Show(true);
  SetTopWindow(mainFrame);
+
 
  return true;
 }

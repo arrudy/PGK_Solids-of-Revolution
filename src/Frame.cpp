@@ -1,4 +1,6 @@
 #include "Frame.h"
+#include "GUIMyFrame1.h"
+#include "vecmat.h"
 
 MyFrame::~MyFrame() {
 	delete m_staticText1;
@@ -32,6 +34,8 @@ this->SetClientSize(this->FromDIP(wxSize(600, 800)));
 	
 	Reset = new wxButton(this, ID_RESETBUTTON, wxT("Reset"), wxDefaultPosition, wxDefaultSize, 0);
 	MenuSize->Add(Reset, 0, wxALIGN_CENTER | wxALL, 5);
+	Render = new wxButton(this, ID_RENDERBUTTON, wxT("Render"), wxDefaultPosition, wxDefaultSize, 0);
+	MenuSize->Add(Render, 0, wxALIGN_CENTER | wxALL, 5);
 
 	m_staticText1 = new wxStaticText(this, wxID_ANY, wxT("Number of points"), wxDefaultPosition, wxDefaultSize, 0);
 	m_staticText1->Wrap(-1);
@@ -79,6 +83,7 @@ this->SetClientSize(this->FromDIP(wxSize(600, 800)));
 	Bind(wxEVT_UPDATE_UI, &MyFrame::UpdateForm, this);
 	Bind(wxEVT_BUTTON, &MyFrame::reset, this, ID_RESETBUTTON);
 	Bind(wxEVT_CHOICE, &MyFrame::newChoice, this);
+	Bind(wxEVT_BUTTON, &MyFrame::render, this, ID_RENDERBUTTON);
 	DrawingPanel->Bind(wxEVT_LEFT_DOWN, &MyFrame::drawPoints, this);
 	
 }
@@ -97,6 +102,23 @@ void MyFrame::reset(wxCommandEvent& WXUNUSED(a)) {
 		v[i + 1]->SetValue(std::string("point y number " + std::to_string(i/2 + 1)));
 	}
 }
+
+void MyFrame::render(wxCommandEvent& WXUNUSED(a)){
+
+std::vector<Vector4> data;
+double ref_width = DrawingPanel->GetSize().GetX()/2.;
+double ref_height = DrawingPanel->GetSize().GetY()/2.;
+
+for(auto & obj : values)
+{
+data.push_back(Vector4(static_cast<double>(obj.x) / ref_width, 0, static_cast<double>(obj.y) / ref_height));
+}
+m_ptr->setData(data);
+}
+
+
+
+
 void MyFrame::newChoice(wxCommandEvent& WXUNUSED(a)) {
 	values.clear();
 	for (auto i = 0; i < v.size(); i += 2) {

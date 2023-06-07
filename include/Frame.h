@@ -29,7 +29,7 @@
 #include <vector>
 #include<string>
 
-
+class GUIMyFrame1;
 
 class MyFrame : public wxFrame
 {
@@ -40,9 +40,16 @@ public:
 	std::vector<wxPoint>& getValues() {
 		return values;
 	}
+	void setValues(std::vector<wxPoint> vec) {values = vec;};
+
+	void set_m_ptr(GUIMyFrame1 * ptr) {m_ptr = ptr;};
+
+		//panel do rysowania
+	wxPanel* DrawingPanel;
 private:
 	//metoda resetuj�ca przy zmianie ilo�ci punkt�w
 	void newChoice(wxCommandEvent& a);
+	void render(wxCommandEvent& a);
 	void Paint(wxPaintEvent& a);
 	void UpdateForm(wxUpdateUIEvent& a);
 	void Draw();
@@ -51,9 +58,10 @@ private:
 	//metoda resetuj�ca wszystkie pola
 	void reset(wxCommandEvent& a);
 	enum {
-		ID_RESETBUTTON = 1001
-		
+		ID_RESETBUTTON = 1001,
+		ID_RENDERBUTTON = 1002
 	};
+	GUIMyFrame1 * m_ptr;
 
 protected:
 	//tekst pierwszy
@@ -64,10 +72,10 @@ protected:
 	wxStaticText* m_staticText2;
 	//drugi pasek wyboru
 	wxChoice* m_choice1;
-	//panel do rysowania
-	wxPanel* DrawingPanel;
 	//przycisk do resetowania
 	wxButton* Reset;
+	//przycisk do renderowania
+	wxButton* Render;
 	//wektor przechowujacy pola tekstowe na wpisywanie punkt�w
 	std::vector< wxTextCtrl*> v;
 	//wektor przechowujacy wartosci puntkow
