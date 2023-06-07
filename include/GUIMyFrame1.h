@@ -41,7 +41,7 @@ class GUIMyFrame1 : public MyFrame1
 		GUIMyFrame1( wxWindow* parent );
 	//// end generated class members
 
-	void setData(std::vector<Vector4> vec) {prepareData(vec,11); Refresh();};
+	void setData(std::vector<Vector4> vec) {_raw_data = vec;prepareData(vec,pow(WxSB_Quality->GetValue(),2) + 5); Refresh();};
 	void set_d_ptr(MyFrame * ptr) {d_ptr = ptr;};
 
 
@@ -55,6 +55,7 @@ class GUIMyFrame1 : public MyFrame1
 
 	wxBitmap draw_target;
 	std::vector<Triangle> _data;
+	std::vector<Vector4> _raw_data;
 
 	bool simplified = true;
 	bool isConvex = false;

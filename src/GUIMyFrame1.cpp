@@ -42,7 +42,7 @@ void GUIMyFrame1::WxPanel_Repaint( wxUpdateUIEvent& event )
 
 void GUIMyFrame1::prepareData(std::vector<Vector4> & data, size_t quality = 21)
 {
-
+if(!data.size()) return;
 //zdecydowalem sie chwilowo na 2x liczenie tego samego (prev_v i curr_v) aby choc troche uproscic implementacje; na pewno da sie zoptymalizowac (czy jest po co?)
 //chyba wystarczy curr_v policzyc przed petla a potem w petli podmienic z prev, tam liczac curr
 //albo cos z petla do{}while pokombinowac
@@ -80,10 +80,19 @@ isConvex = true;
 
         Vector4 PoI = ColiderFunc::intersect(line1,line2);
 
-        if(x_begin < PoI.X() && PoI.X() < x_end) 
+        if(x_begin < PoI.X() && PoI.X() < x_end ) 
         {
+            double x_anbegin = data[an_prev].X();
+            double x_anend = data[an_curr].X();
+            if(x_anbegin > x_anend) std::swap(x_anbegin,x_anend);
+            if(x_anbegin < PoI.X() && PoI.X() < x_anend ) 
+            {
             isConvex = false;
             break;
+            }
+
+
+
         }
 
     }
@@ -230,7 +239,6 @@ void GUIMyFrame1::m_button_load_geometry_click( wxCommandEvent& event )
 {
  wxFileDialog WxOpenFileDialog(this, wxT("Choose a file"), wxT(""), wxT(""), wxT("Geometry file (*.geo)|*.geo"), wxFD_OPEN | wxFD_FILE_MUST_EXIST);
 
-std::vector<Vector4> data;
 
 
  if (WxOpenFileDialog.ShowModal() == wxID_OK)
@@ -240,13 +248,13 @@ std::vector<Vector4> data;
   std::ifstream in(WxOpenFileDialog.GetPath().ToAscii());
   if (in.is_open())
   {
-   data.clear();
+   _raw_data.clear();
    while (!in.eof())
    {
     in >> x1 >> y1 >> z1;
     Vector4 point(x1, y1, z1);
     std::cout << point << "\n";
-    data.push_back(point);
+    _raw_data.push_back(point);
    }
    in.close();
   }
@@ -259,7 +267,7 @@ int height = d_ptr->DrawingPanel->GetSize().GetY();
 
 std::vector<wxPoint> update;
 
-for(auto & obj : data)
+for(auto & obj : _raw_data)
 {
     update.push_back(wxPoint( obj.X()/2. * width, obj.Z()/2. * height ));
 }
@@ -268,7 +276,7 @@ d_ptr->Refresh();
 
 
 
-prepareData(data);
+prepareData(_raw_data,pow(WxSB_Quality->GetValue(),2) + 5);
  }
 
 
@@ -293,7 +301,12 @@ WxST_RotateZ->SetLabel(wxString::Format(wxT("%d"), WxSB_RotateZ->GetValue()));
 WxST_ScaleX->SetLabel(wxString::Format(wxT("%g"), WxSB_ScaleX->GetValue() / 100.0));
 WxST_ScaleY->SetLabel(wxString::Format(wxT("%g"), WxSB_ScaleY->GetValue() / 100.0));
 WxST_ScaleZ->SetLabel(wxString::Format(wxT("%g"), WxSB_ScaleZ->GetValue() / 100.0));
+WxST_Quality->SetLabel(wxString::Format(wxT("%d"), static_cast<int>(pow(WxSB_Quality->GetValue(),2)) + 5));
 
+if(event.GetEventObject() == WxSB_Quality)
+{
+    prepareData(_raw_data,pow(WxSB_Quality->GetValue(),2) + 5);
+}
 
 Repaint();
 }

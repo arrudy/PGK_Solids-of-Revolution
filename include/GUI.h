@@ -40,6 +40,7 @@ class MyFrame1 : public wxFrame
 		wxStaticText* m_staticText31;
 		wxStaticText* m_staticText33;
 		wxStaticText* m_staticText35;
+		wxStaticText* m_staticText37;
 		
 		// Virtual event handlers, overide them in your derived class
 		virtual void WxPanel_Repaint( wxUpdateUIEvent& event ) { event.Skip(); }
@@ -71,6 +72,8 @@ class MyFrame1 : public wxFrame
 		wxStaticText* WxST_ScaleY;
 		wxSlider* WxSB_ScaleZ;
 		wxStaticText* WxST_ScaleZ;
+		wxSlider* WxSB_Quality;
+		wxStaticText* WxST_Quality;
 		
 		MyFrame1( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = _("GFK Lab 05"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 600,400 ), long style = wxDEFAULT_FRAME_STYLE|wxTAB_TRAVERSAL );
 		

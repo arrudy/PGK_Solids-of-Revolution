@@ -153,6 +153,25 @@ MyFrame1::MyFrame1( wxWindow* parent, wxWindowID id, const wxString& title, cons
 	WxST_ScaleZ = new wxStaticText( this, wxID_ANY, _("1.0"), wxDefaultPosition, wxDefaultSize, 0 );
 	WxST_ScaleZ->Wrap( -1 );
 	fgSizer1->Add( WxST_ScaleZ, 0, wxALL, 5 );
+
+
+
+	m_staticText37 = new wxStaticText( this, wxID_ANY, _("Jakość"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText37->Wrap( -1 );
+	fgSizer1->Add( m_staticText37, 0, wxALL, 5 );
+	
+	WxSB_Quality = new wxSlider( this, wxID_ANY, 4, 1, 8, wxDefaultPosition, wxDefaultSize, wxSL_HORIZONTAL );
+	WxSB_Quality->SetMinSize(this->FromDIP(wxSize(100, -1)));
+	
+	fgSizer1->Add( WxSB_Quality, 0, wxALL, 5 );
+	
+	WxST_Quality = new wxStaticText( this, wxID_ANY, _("21"), wxDefaultPosition, wxDefaultSize, 0 );
+	WxST_Quality->Wrap( -1 );
+	fgSizer1->Add( WxST_Quality, 0, wxALL, 5 );
+
+
+
+
 	
 	
 	bSizer2->Add( fgSizer1, 1, wxEXPAND, 5 );
@@ -251,6 +270,18 @@ MyFrame1::MyFrame1( wxWindow* parent, wxWindowID id, const wxString& title, cons
 	WxSB_ScaleZ->Connect( wxEVT_SCROLL_THUMBTRACK, wxScrollEventHandler( MyFrame1::Scrolls_Updated ), NULL, this );
 	WxSB_ScaleZ->Connect( wxEVT_SCROLL_THUMBRELEASE, wxScrollEventHandler( MyFrame1::Scrolls_Updated ), NULL, this );
 	WxSB_ScaleZ->Connect( wxEVT_SCROLL_CHANGED, wxScrollEventHandler( MyFrame1::Scrolls_Updated ), NULL, this );
+
+	WxSB_Quality->Connect( wxEVT_SCROLL_TOP, wxScrollEventHandler( MyFrame1::Scrolls_Updated ), NULL, this );
+	WxSB_Quality->Connect( wxEVT_SCROLL_BOTTOM, wxScrollEventHandler( MyFrame1::Scrolls_Updated ), NULL, this );
+	WxSB_Quality->Connect( wxEVT_SCROLL_LINEUP, wxScrollEventHandler( MyFrame1::Scrolls_Updated ), NULL, this );
+	WxSB_Quality->Connect( wxEVT_SCROLL_LINEDOWN, wxScrollEventHandler( MyFrame1::Scrolls_Updated ), NULL, this );
+	WxSB_Quality->Connect( wxEVT_SCROLL_PAGEUP, wxScrollEventHandler( MyFrame1::Scrolls_Updated ), NULL, this );
+	WxSB_Quality->Connect( wxEVT_SCROLL_PAGEDOWN, wxScrollEventHandler( MyFrame1::Scrolls_Updated ), NULL, this );
+	WxSB_Quality->Connect( wxEVT_SCROLL_THUMBTRACK, wxScrollEventHandler( MyFrame1::Scrolls_Updated ), NULL, this );
+	WxSB_Quality->Connect( wxEVT_SCROLL_THUMBRELEASE, wxScrollEventHandler( MyFrame1::Scrolls_Updated ), NULL, this );
+	WxSB_Quality->Connect( wxEVT_SCROLL_CHANGED, wxScrollEventHandler( MyFrame1::Scrolls_Updated ), NULL, this );
+
+
 }
 
 MyFrame1::~MyFrame1()
@@ -339,5 +370,15 @@ MyFrame1::~MyFrame1()
 	WxSB_ScaleZ->Disconnect( wxEVT_SCROLL_THUMBTRACK, wxScrollEventHandler( MyFrame1::Scrolls_Updated ), NULL, this );
 	WxSB_ScaleZ->Disconnect( wxEVT_SCROLL_THUMBRELEASE, wxScrollEventHandler( MyFrame1::Scrolls_Updated ), NULL, this );
 	WxSB_ScaleZ->Disconnect( wxEVT_SCROLL_CHANGED, wxScrollEventHandler( MyFrame1::Scrolls_Updated ), NULL, this );
+
+	WxSB_Quality->Disconnect( wxEVT_SCROLL_TOP, wxScrollEventHandler( MyFrame1::Scrolls_Updated ), NULL, this );
+	WxSB_Quality->Disconnect( wxEVT_SCROLL_BOTTOM, wxScrollEventHandler( MyFrame1::Scrolls_Updated ), NULL, this );
+	WxSB_Quality->Disconnect( wxEVT_SCROLL_LINEUP, wxScrollEventHandler( MyFrame1::Scrolls_Updated ), NULL, this );
+	WxSB_Quality->Disconnect( wxEVT_SCROLL_LINEDOWN, wxScrollEventHandler( MyFrame1::Scrolls_Updated ), NULL, this );
+	WxSB_Quality->Disconnect( wxEVT_SCROLL_PAGEUP, wxScrollEventHandler( MyFrame1::Scrolls_Updated ), NULL, this );
+	WxSB_Quality->Disconnect( wxEVT_SCROLL_PAGEDOWN, wxScrollEventHandler( MyFrame1::Scrolls_Updated ), NULL, this );
+	WxSB_Quality->Disconnect( wxEVT_SCROLL_THUMBTRACK, wxScrollEventHandler( MyFrame1::Scrolls_Updated ), NULL, this );
+	WxSB_Quality->Disconnect( wxEVT_SCROLL_THUMBRELEASE, wxScrollEventHandler( MyFrame1::Scrolls_Updated ), NULL, this );
+	WxSB_Quality->Disconnect( wxEVT_SCROLL_CHANGED, wxScrollEventHandler( MyFrame1::Scrolls_Updated ), NULL, this );
 	
 }
