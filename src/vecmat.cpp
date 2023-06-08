@@ -29,6 +29,7 @@ Vector4 Vector4::operator+ (const Vector4 &gVector)
 
  Vector4 Result(0,0,0);
  Result.data[3] = 0.;
+ //#pragma omp parallel for
  for (int i=0;i<4;i++) Result.data[i]=data[i]+gVector.data[i];
  return Result;
 }
@@ -38,6 +39,7 @@ Vector4 Vector4::operator- (const Vector4 &gVector)
 
  Vector4 Result(0,0,0);
  Result.data[3] = 0.;
+//#pragma omp parallel for
  for (int i=0;i<4;i++) Result.data[i]=data[i]-gVector.data[i];
  return Result;
 }
@@ -47,6 +49,7 @@ Vector4 operator* (const Vector4 &gVector,double val)
 
  Vector4 Result(0,0,0);
  Result.data[3] = 0.;
+ #pragma omp parallel for
  for (int i=0;i<4;i++) Result.data[i]=gVector.data[i]*val;
  return Result;
 }
@@ -82,6 +85,7 @@ Vector4 operator* (const Matrix4 gMatrix,const Vector4 gVector)
  Vector4 tmp(0,0,0);
  tmp.data[3] = 0.;
 
+#pragma omp parallel for
  for (int i=0;i<4;i++)
   {
    tmp.data[i]=0.0;

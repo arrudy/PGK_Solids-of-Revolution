@@ -13,7 +13,7 @@
 MyFrame1::MyFrame1( wxWindow* parent, wxWindowID id, const wxString& title, const wxPoint& pos, const wxSize& size, long style ) : wxFrame( parent, id, title, pos, size, style )
 {
 	//this->SetSizeHints( wxSize( 600,400 ), wxDefaultSize );
-	this->SetClientSize(this->FromDIP(wxSize(600, 400)));
+	this->SetClientSize(this->FromDIP(wxSize(600, 450)));
 	
 	wxBoxSizer* bSizer1;
 	bSizer1 = new wxBoxSizer( wxHORIZONTAL );
@@ -170,6 +170,13 @@ MyFrame1::MyFrame1( wxWindow* parent, wxWindowID id, const wxString& title, cons
 	fgSizer1->Add( WxST_Quality, 0, wxALL, 5 );
 
 
+	m_checkBoxRender = new wxCheckBox( this, wxID_ANY, wxT("Simplified renderer"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_checkBoxRender->SetValue(true);
+	fgSizer1->Add( m_checkBoxRender, 0, wxALL, 5 );
+
+	m_checkBoxPersp = new wxCheckBox( this, wxID_ANY, wxT("Perspective"), wxDefaultPosition, wxDefaultSize, 0 );
+	fgSizer1->Add( m_checkBoxPersp, 0, wxALL, 5 );
+
 
 
 	
@@ -281,6 +288,8 @@ MyFrame1::MyFrame1( wxWindow* parent, wxWindowID id, const wxString& title, cons
 	WxSB_Quality->Connect( wxEVT_SCROLL_THUMBRELEASE, wxScrollEventHandler( MyFrame1::Scrolls_Updated ), NULL, this );
 	WxSB_Quality->Connect( wxEVT_SCROLL_CHANGED, wxScrollEventHandler( MyFrame1::Scrolls_Updated ), NULL, this );
 
+	m_checkBoxRender->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( MyFrame1::selectRender ), NULL, this );
+	m_checkBoxPersp->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( MyFrame1::selectPersp ), NULL, this );
 
 }
 
@@ -380,5 +389,8 @@ MyFrame1::~MyFrame1()
 	WxSB_Quality->Disconnect( wxEVT_SCROLL_THUMBTRACK, wxScrollEventHandler( MyFrame1::Scrolls_Updated ), NULL, this );
 	WxSB_Quality->Disconnect( wxEVT_SCROLL_THUMBRELEASE, wxScrollEventHandler( MyFrame1::Scrolls_Updated ), NULL, this );
 	WxSB_Quality->Disconnect( wxEVT_SCROLL_CHANGED, wxScrollEventHandler( MyFrame1::Scrolls_Updated ), NULL, this );
-	
+
+	m_checkBoxRender->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( MyFrame1::selectRender ), NULL, this );
+	m_checkBoxPersp->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( MyFrame1::selectPersp ), NULL, this );
+
 }

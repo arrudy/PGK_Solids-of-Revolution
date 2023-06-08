@@ -114,6 +114,17 @@ isConvex = true;
 
 
 
+if(!isConvex)
+{
+    m_checkBoxRender->SetValue(false);
+    m_checkBoxRender->Disable();
+}
+else
+{
+    m_checkBoxRender->Enable();
+    m_checkBoxRender->SetValue(simplified);
+}
+
 
 
 _data.clear();
@@ -312,6 +323,18 @@ Repaint();
 }
 
 
+
+
+void GUIMyFrame1::selectRender( wxCommandEvent& event ){
+    simplified = event.GetInt();
+    Repaint();
+}
+
+void GUIMyFrame1::selectPersp( wxCommandEvent& event )
+{
+    perspective = event.GetInt();
+    Repaint();
+}
 
 
 
@@ -542,7 +565,7 @@ size_t _height;
 
 
                                     //kopia trojkata!
-void drawTriangle( wxBufferedDC & dc, Triangle tr, std::vector<std::vector<double>> & z_buff)
+void drawTriangle( wxImage & dc, Triangle tr, std::vector<std::vector<double>> & z_buff)
 {
 struct
 {
@@ -557,9 +580,9 @@ struct
     {
         double a = (end.X() - begin.X()) / (end.Y() - begin.Y());
         double a_z = (end.Z() - begin.Z()) / (end.Y() - begin.Y());
-        std::vector<Vector4> result;
+        
         long y0 = begin.Y();
-
+        std::vector<Vector4> result;
         //optymistycznie zakladam ze powierzchnia nie ma grubosci
         //krotkowzroczne, bo rowniez aplikuje sie do linii :(
         //ostatecznie, do wytyczenia linii wykorzystuje bresenham()
@@ -568,13 +591,15 @@ struct
         {
         //if(a == INFINITY) a = 0.;
         //if( a_z == INFINITY) a_z = 0.;
+        result.resize((static_cast<long>(end.Y()) - y0 + 1));
 
-        for(long pos = y0; pos <= end.Y(); ++pos)
+        #pragma omp parallel for
+        for(long pos = y0; pos <= static_cast<long>(end.Y()); ++pos)
         {
-            result.push_back(Vector4(
+            result[pos - y0] = Vector4(
                 a * (static_cast<double>(pos) - y0) + begin.X(),
                 pos,
-                a_z * (static_cast<double>(pos) - y0) + begin.Z()) );
+                a_z * (static_cast<double>(pos) - y0) + begin.Z()) ;
         }
         return result;
         }
@@ -608,13 +633,14 @@ if(x02[x02.size()/2].X() < x012[x012.size()/2].X())
 
 //bayraktar
 
-
+ImgDataHandler handle(dc);
 
 //inner color
 //doing all the heavy lifting
 
 //dc.SetPen(wxPen(*wxRED,2));
-dc.SetPen(*wxRED_PEN);
+//dc.SetPen(*wxRED_PEN);
+#pragma omp parallel for
 for(size_t i = 0; i < x012.size(); ++i) //iteracja po pietrach
 {
     double a_z = (right[i].Z() - left[i].Z()) / (right[i].X() - left[i].X()); //interpolacja
@@ -627,11 +653,16 @@ for(size_t i = 0; i < x012.size(); ++i) //iteracja po pietrach
         if(0<= y && y < z_buff.size() && 0 <= x && x < z_buff[y].size())
         {
             double z_height = a_z*(static_cast<double>(x) - left[i].X()) + left[i].Z();
+
+            #pragma omp critical (render)
             if(z_height < z_buff[y][x] && z_height > 0.1)
             {
                 //std::cout << x << ", " << y << "\n";
                 z_buff[y][x] = z_height;
-                dc.DrawPoint(x,y);
+                //dc.DrawPoint(x,y);
+                handle(y,x,0) = 200;
+                handle(y,x,1) = 0;
+                handle(y,x,2) = 0;
             }
             //else
             //{
@@ -645,7 +676,8 @@ for(size_t i = 0; i < x012.size(); ++i) //iteracja po pietrach
 }
 
 //outline
-dc.SetPen(*wxBLACK_PEN);
+//dc.SetPen(*wxBLACK_PEN);
+#pragma omp parallel for
 for(short l = 0; l < 3; ++l)
 {
 
@@ -654,10 +686,17 @@ std::vector<Vector4> line = bresenham(tr._vert[l], tr._vert[ (l+1)%3 ]);
 for(auto & obj : line)
 {
     size_t x = (obj.X()), y = (obj.Y());
-    if(0<= y && y < z_buff.size() && 0 <= x && x < z_buff[y].size() && obj.Z() > 0.1 && obj.Z() <= z_buff[y][x])//fabs(obj.Z() - z_buff[y][x]) < 0.01
+    if(0<= y && y < z_buff.size() && 0 <= x && x < z_buff[y].size() )//fabs(obj.Z() - z_buff[y][x]) < 0.01
     {
+        #pragma omp critical (render)
+        if(obj.Z() > 0.1 && obj.Z() <= z_buff[y][x])
+        {
         z_buff[y][x] = obj.Z();
-        dc.DrawPoint(x,y);
+        //dc.DrawPoint(x,y);
+        handle(y,x,0) = 0;
+        handle(y,x,1) = 0;
+        handle(y,x,2) = 0;
+        }
     }
 }
 
@@ -668,15 +707,18 @@ for(auto & obj : line)
 
 }
 
-dc.SetPen(*wxBLACK_PEN);
+//dc.SetPen(*wxBLACK_PEN);
 }
 
 
 void GUIMyFrame1::Repaint()
 {
 wxClientDC dc1(WxPanel);
-draw_target = wxBitmap(WxPanel->GetSize());
- wxBufferedDC dc(&dc1,draw_target);
+draw_target = wxImage(WxPanel->GetSize()); //do tego rysujemy sposobem domowym
+
+
+wxBitmap render_target(draw_target); //do tego rysujemy dc.draw
+ wxBufferedDC dc(&dc1,render_target);
  int w, h;
  WxPanel->GetSize(&w, &h);
 
@@ -686,16 +728,17 @@ dc.Clear();
 std::vector<Triangle> data;
 
 
-std::vector<std::vector<double>> z_buffer;
+std::vector<std::vector<double>> z_buffer(h);
 
 for(size_t i = 0; i < h; ++i)
 {
-    std::vector<double> row;
+    std::vector<double> row(w);
     for(size_t j = 0; j < w; ++j)
     {
-        row.push_back(9999.9999);
+        row[j] = 9999.9999;
     }
-    z_buffer.push_back(row);
+    z_buffer[i] = row;
+    //z_buffer.push_back(row);
 }
 
 
@@ -714,7 +757,6 @@ for(std::vector<Triangle>::iterator obj = _data.begin(); obj < _data.end(); ++ob
     if((simplified & !s1) || ((simplified && isConvex) && copy.normal().Z() < 0.)) continue;
     else
     {
-        
         data.push_back(copy);
     }
 }
@@ -729,12 +771,13 @@ std::stable_sort(data.begin(),data.end(),TrianglePolicy);
 dc.SetBrush(*wxRED_BRUSH);
 
 //drawing
+
 for(std::vector<Triangle>::iterator obj = data.begin(); obj < data.end(); ++obj)
 {
     for(auto & point : obj->_vert)
         {
             //clipping!
-            //point = matrix_perspgl(0.15, h *0.15 / w, -0.1 , -100.) * point;
+            if(perspective) point = matrix_perspgl(0.15, h *0.15 / w, -0.1 , -100.) * point;
             //point = matrix_perspangular(w,h,0.1,100.) * point;
             if(point.data[3]) for(int i = 0 ;i < 4; ++i) point.data[i] /= point.data[3];
             point = matrix_viewport(w,h) * point;
@@ -748,7 +791,7 @@ for(std::vector<Triangle>::iterator obj = data.begin(); obj < data.end(); ++obj)
 //wlasciwe rysowanie trojkata
     if(!simplified || !isConvex)
     {
-    drawTriangle(dc,*obj,z_buffer);
+    drawTriangle(draw_target,*obj,z_buffer);
     }
     else
     {
@@ -761,6 +804,7 @@ for(std::vector<Triangle>::iterator obj = data.begin(); obj < data.end(); ++obj)
 
 
 }
+if(!simplified || !isConvex) dc.DrawBitmap(wxBitmap(draw_target),wxPoint(0,0));
 
 
 // tu rysowac

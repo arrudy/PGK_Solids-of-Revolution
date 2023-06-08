@@ -22,6 +22,7 @@
 #include <wx/slider.h>
 #include <wx/sizer.h>
 #include <wx/frame.h>
+#include <wx/checkbox.h>
 
 ///////////////////////////////////////////////////////////////////////////
 
@@ -41,12 +42,16 @@ class MyFrame1 : public wxFrame
 		wxStaticText* m_staticText33;
 		wxStaticText* m_staticText35;
 		wxStaticText* m_staticText37;
+
+		wxCheckBox * m_checkBoxRender;
+		wxCheckBox * m_checkBoxPersp;
 		
 		// Virtual event handlers, overide them in your derived class
 		virtual void WxPanel_Repaint( wxUpdateUIEvent& event ) { event.Skip(); }
 		virtual void m_button_load_geometry_click( wxCommandEvent& event ) { event.Skip(); }
 		virtual void Scrolls_Updated( wxScrollEvent& event ) { event.Skip(); }
-		
+		virtual void selectRender( wxCommandEvent& event ) { event.Skip(); }
+		virtual void selectPersp( wxCommandEvent& event ) { event.Skip(); }
 	
 	public:
 		wxPanel* WxPanel;

@@ -36,6 +36,9 @@ class GUIMyFrame1 : public MyFrame1
 		void WxPanel_Repaint( wxUpdateUIEvent& event );
 		void m_button_load_geometry_click( wxCommandEvent& event );
 		void Scrolls_Updated( wxScrollEvent& event );
+		void selectRender( wxCommandEvent& event );
+		void selectPersp( wxCommandEvent& event );
+
 	public:
 		/** Constructor */
 		GUIMyFrame1( wxWindow* parent );
@@ -53,10 +56,11 @@ class GUIMyFrame1 : public MyFrame1
 //quality odpowiada za to, ile lacznie punktow bedzie odpowiadac za przyblizenie okregu
 	void prepareData(std::vector<Vector4> & data, size_t quality);
 
-	wxBitmap draw_target;
-	std::vector<Triangle> _data;
-	std::vector<Vector4> _raw_data;
+	wxImage draw_target;
+	std::vector<Triangle> _data; //przenosi mesh
+	std::vector<Vector4> _raw_data; //przenosi punkty wyznaczajace ksztalt przekroju
 
+	bool perspective = false;
 	bool simplified = true;
 	bool isConvex = false;
 
