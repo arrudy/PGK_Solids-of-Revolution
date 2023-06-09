@@ -87,12 +87,34 @@ this->SetClientSize(this->FromDIP(wxSize(600, 800)));
 	DrawingPanel->Bind(wxEVT_LEFT_DOWN, &MyFrame::drawPoints, this);
 	
 }
+
 void MyFrame::drawPoints(wxMouseEvent& a) {
 	if (values.size()< m_choice2->GetSelection()+1) {
 		wxPoint help(a.GetPosition());
 		values.push_back(wxPoint(help.x - DrawingPanel->GetSize().x / 2, help.y - DrawingPanel->GetSize().y / 2));
 		/*wxString message = wxString::Format("Mouse detected x=%d y =%d", help.x - DrawingPanel->GetSize().x / 2, help.y - DrawingPanel->GetSize().y / 2);
 		wxLogStatus(message);*/
+	}
+	else{ //edycja istniajacych punktow
+		wxPoint mousePos(a.GetPosition() - wxPoint(DrawingPanel->GetSize().x/2,DrawingPanel->GetSize().y/2));
+		if(!editPoint)
+		{
+		for(auto & obj : values)
+		{
+			if(fabs(mousePos.x - obj.x) < 3 && fabs(mousePos.y - obj.y) < 3)
+			{
+				editPoint = &obj;
+				break;
+			}
+		}
+
+		}
+		else
+		{
+			*editPoint = mousePos;
+			editPoint = nullptr;
+		}
+
 	}
 }
 void MyFrame::reset(wxCommandEvent& WXUNUSED(a)) {
@@ -101,6 +123,7 @@ void MyFrame::reset(wxCommandEvent& WXUNUSED(a)) {
 		v[i]->SetValue(std::string("point x number " + std::to_string(i/2 + 1)));
 		v[i + 1]->SetValue(std::string("point y number " + std::to_string(i/2 + 1)));
 	}
+	editPoint = nullptr;
 }
 
 void MyFrame::render(wxCommandEvent& WXUNUSED(a)){
@@ -179,6 +202,12 @@ void MyFrame::Draw() {
 		}
 		if (values.size() > 2) {
 			Drawing->DrawLine(values[values.size() - 1], values[0]);
+		}
+		if(editPoint)
+		{
+			Drawing->SetPen(*wxRED_PEN);
+			Drawing->DrawCircle(*editPoint, 4);
+			Drawing->SetPen(*wxBLACK_PEN);
 		}
 		
 	}

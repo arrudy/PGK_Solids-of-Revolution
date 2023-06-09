@@ -40,7 +40,7 @@ public:
 	std::vector<wxPoint>& getValues() {
 		return values;
 	}
-	void setValues(std::vector<wxPoint> vec) {values = vec;};
+	void setValues(std::vector<wxPoint> vec) {values = vec; editPoint = nullptr; m_choice2->SetSelection(vec.size()-1);};
 
 	void set_m_ptr(GUIMyFrame1 * ptr) {m_ptr = ptr;};
 
@@ -83,5 +83,6 @@ protected:
 	// buffer u�ywany do rysowania
 	wxBitmap Buffer;
 	
+	wxPoint * editPoint = nullptr;
 };
 
