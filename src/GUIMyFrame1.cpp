@@ -754,7 +754,7 @@ for(std::vector<Triangle>::iterator obj = _data.begin(); obj < _data.end(); ++ob
 
     //warunek s1 aplikuje sie tylko przy uproszczonym renderze
     //warunek wektor normalny aplikuje sie tylko wtedy, gdy bryla nie jest wklesla
-    if((simplified & !s1) || ((simplified && isConvex) && copy.normal().Z() < 0.)) continue;
+    if((simplified & !s1) || ((!perspective && isConvex) && copy.normal().Z() < 0.)) continue;
     else
     {
         data.push_back(copy);
