@@ -144,12 +144,12 @@ void MyFrame::Draw() {
 	Drawing->SetBackground(*wxWHITE_BRUSH);
 	Drawing->Clear();
 
-	Drawing->DrawLine(0, -350, 0, 400);
-	Drawing->DrawLine(0, -350, 5, -345);
-	Drawing->DrawLine(0, -350, -5, -345);
-	Drawing->DrawLine(-200, 0, 200, 0);
-	Drawing->DrawLine(200, 0, 195,-5);
-	Drawing->DrawLine(200, 0, 195, 5);
+	Drawing->DrawLine(0, -DrawingPanel->GetSize().y / 2+5, 0, DrawingPanel->GetSize().y / 2-5);
+	Drawing->DrawLine(0, -DrawingPanel->GetSize().y / 2 + 5, 5, -DrawingPanel->GetSize().y / 2 + 10);
+	Drawing->DrawLine(0, -DrawingPanel->GetSize().y / 2 + 5, -5, -DrawingPanel->GetSize().y / 2 + 10);
+	Drawing->DrawLine(-DrawingPanel->GetSize().x / 2 +5, 0, DrawingPanel->GetSize().x / 2-5, 0);
+	Drawing->DrawLine(DrawingPanel->GetSize().x / 2 -5, 0, DrawingPanel->GetSize().x / 2 -10 ,-5);
+	Drawing->DrawLine(DrawingPanel->GetSize().x / 2 -5, 0, DrawingPanel->GetSize().x / 2 -10, 5);
 	if ((m_choice1->GetSelection())) {
 		values.clear();
 
@@ -185,6 +185,7 @@ void MyFrame::Draw() {
 		if (values.size() > 2) {
 			Drawing->DrawLine(values[values.size() - 1], values[0]);
 		}
+		
 
 	}
 
