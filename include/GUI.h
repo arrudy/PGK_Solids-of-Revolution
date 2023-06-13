@@ -81,7 +81,7 @@ class MyFrame1 : public wxFrame
 		wxStaticText* WxST_Quality;
 		
 		MyFrame1( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = _("GFK Lab 05"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 600,400 ), long style = wxDEFAULT_FRAME_STYLE|wxTAB_TRAVERSAL );
-		
+		virtual void close( wxCloseEvent& event ) { event.Skip(); }
 		~MyFrame1();
 	
 };

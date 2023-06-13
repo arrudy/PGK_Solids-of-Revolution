@@ -62,6 +62,7 @@ private:
 		ID_RENDERBUTTON = 1002
 	};
 	GUIMyFrame1 * m_ptr;
+	void close( wxCloseEvent& event );
 
 protected:
 	//tekst pierwszy

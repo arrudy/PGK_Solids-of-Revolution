@@ -11,7 +11,7 @@
 #endif
 
 
-
+void GUIMyFrame1::close( wxCloseEvent& event ) {d_ptr->Destroy(); Destroy();};
 
 GUIMyFrame1::GUIMyFrame1( wxWindow* parent )
 :

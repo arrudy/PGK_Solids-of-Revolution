@@ -290,7 +290,7 @@ MyFrame1::MyFrame1( wxWindow* parent, wxWindowID id, const wxString& title, cons
 
 	m_checkBoxRender->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( MyFrame1::selectRender ), NULL, this );
 	m_checkBoxPersp->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( MyFrame1::selectPersp ), NULL, this );
-
+	this->Connect( wxEVT_CLOSE_WINDOW, wxCloseEventHandler( MyFrame1::close ) );
 }
 
 MyFrame1::~MyFrame1()
@@ -392,5 +392,5 @@ MyFrame1::~MyFrame1()
 
 	m_checkBoxRender->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( MyFrame1::selectRender ), NULL, this );
 	m_checkBoxPersp->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( MyFrame1::selectPersp ), NULL, this );
-
+	this->Disconnect( wxEVT_CLOSE_WINDOW, wxCloseEventHandler( MyFrame1::close ) );
 }

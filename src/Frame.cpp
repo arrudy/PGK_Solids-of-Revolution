@@ -2,6 +2,8 @@
 #include "GUIMyFrame1.h"
 #include "vecmat.h"
 
+void MyFrame::close( wxCloseEvent& event ) {m_ptr->Destroy(); Destroy();};
+
 MyFrame::~MyFrame() {
 	delete m_staticText1;
 	delete m_choice2;
@@ -9,6 +11,7 @@ MyFrame::~MyFrame() {
 	delete m_choice1;
 	delete DrawingPanel;
 	delete Reset;
+	this->Disconnect( wxEVT_CLOSE_WINDOW, wxCloseEventHandler( MyFrame::close ) );
 }
 
 MyFrame::MyFrame(wxWindow* parent, wxWindowID id, const wxString& title, const wxPoint& pos, const wxSize& size, long style) : wxFrame(parent, id, title, pos, size, style) {
@@ -86,6 +89,7 @@ MyFrame::MyFrame(wxWindow* parent, wxWindowID id, const wxString& title, const w
 	Bind(wxEVT_BUTTON, &MyFrame::render, this, ID_RENDERBUTTON);
 	DrawingPanel->Bind(wxEVT_LEFT_DOWN, &MyFrame::drawPoints, this);
 
+	this->Connect( wxEVT_CLOSE_WINDOW, wxCloseEventHandler( MyFrame::close ) );
 }
 
 void MyFrame::drawPoints(wxMouseEvent& a) {

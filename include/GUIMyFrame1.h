@@ -42,6 +42,7 @@ class GUIMyFrame1 : public MyFrame1
 	public:
 		/** Constructor */
 		GUIMyFrame1( wxWindow* parent );
+		void close( wxCloseEvent& event );
 	//// end generated class members
 
 	void setData(std::vector<Vector4> vec) {_raw_data = vec;prepareData(vec,pow(WxSB_Quality->GetValue(),2) + 5); Refresh();};
