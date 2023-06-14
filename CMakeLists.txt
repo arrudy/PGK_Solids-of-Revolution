@@ -72,7 +72,7 @@ file(GLOB SOURCES "${PROJECT_SOURCE_DIR}/src/*.cpp")
 add_executable(${PROJECT_NAME} main.cpp ${SOURCES})
 
 #-lfreetype -lopengl32 -lwinmm -lgdi32 -lstdc++
-target_link_libraries(${PROJECT_NAME} -fopenmp -lpthread -static-libgcc -static-libstdc++  wx::core wx::base wx::gl ${wxWidgets_LIBRARIES} -lm)
+target_link_libraries(${PROJECT_NAME} -static -fopenmp -lwinpthread -static-libgcc -static-libstdc++  wx::core wx::base wx::gl ${wxWidgets_LIBRARIES} -lm)
 target_include_directories(${PROJECT_NAME} PRIVATE ${INCL_DIR} )
 
 add_test(NAME launch COMMAND ./${PROJECT_NAME})

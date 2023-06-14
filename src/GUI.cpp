@@ -13,7 +13,7 @@
 MyFrame1::MyFrame1( wxWindow* parent, wxWindowID id, const wxString& title, const wxPoint& pos, const wxSize& size, long style ) : wxFrame( parent, id, title, pos, size, style )
 {
 	//this->SetSizeHints( wxSize( 600,400 ), wxDefaultSize );
-	this->SetClientSize(this->FromDIP(wxSize(600, 450)));
+	this->SetClientSize(this->FromDIP(wxSize(600, 500)));
 	
 	wxBoxSizer* bSizer1;
 	bSizer1 = new wxBoxSizer( wxHORIZONTAL );
@@ -26,10 +26,13 @@ MyFrame1::MyFrame1( wxWindow* parent, wxWindowID id, const wxString& title, cons
 	wxBoxSizer* bSizer2;
 	bSizer2 = new wxBoxSizer( wxVERTICAL );
 	
-	m_button_load_geometry = new wxButton( this, wxID_ANY, wxT("Wczytaj Geometrię"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_button_load_geometry = new wxButton( this, wxID_ANY, wxT("Wczytaj Geometri\u0119"), wxDefaultPosition, wxDefaultSize, 0 );
 	const wxSize sizeM = this->GetTextExtent("M");
 	bSizer2->Add( m_button_load_geometry, wxSizerFlags(0).Center().Border(wxALL, sizeM.y));
 	
+	m_button_screenshot = new wxButton( this, wxID_ANY, wxT("Screenshot"), wxDefaultPosition, wxDefaultSize, 0 );
+	bSizer2->Add( m_button_screenshot, wxSizerFlags(0).Center().Border(wxALL, sizeM.y));
+
 	wxFlexGridSizer* fgSizer1;
 	fgSizer1 = new wxFlexGridSizer( 0, 3, 0, 0 );
 	fgSizer1->SetFlexibleDirection( wxBOTH );
@@ -196,6 +199,7 @@ MyFrame1::MyFrame1( wxWindow* parent, wxWindowID id, const wxString& title, cons
 	// Connect Events
 	WxPanel->Connect( wxEVT_UPDATE_UI, wxUpdateUIEventHandler( MyFrame1::WxPanel_Repaint ), NULL, this );
 	m_button_load_geometry->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MyFrame1::m_button_load_geometry_click ), NULL, this );
+	m_button_screenshot->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MyFrame1::screenshot ), NULL, this );
 	WxSB_TranslationX->Connect( wxEVT_SCROLL_TOP, wxScrollEventHandler( MyFrame1::Scrolls_Updated ), NULL, this );
 	WxSB_TranslationX->Connect( wxEVT_SCROLL_BOTTOM, wxScrollEventHandler( MyFrame1::Scrolls_Updated ), NULL, this );
 	WxSB_TranslationX->Connect( wxEVT_SCROLL_LINEUP, wxScrollEventHandler( MyFrame1::Scrolls_Updated ), NULL, this );
@@ -298,6 +302,7 @@ MyFrame1::~MyFrame1()
 	// Disconnect Events
 	WxPanel->Disconnect( wxEVT_UPDATE_UI, wxUpdateUIEventHandler( MyFrame1::WxPanel_Repaint ), NULL, this );
 	m_button_load_geometry->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MyFrame1::m_button_load_geometry_click ), NULL, this );
+	m_button_screenshot->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MyFrame1::screenshot ), NULL, this );
 	WxSB_TranslationX->Disconnect( wxEVT_SCROLL_TOP, wxScrollEventHandler( MyFrame1::Scrolls_Updated ), NULL, this );
 	WxSB_TranslationX->Disconnect( wxEVT_SCROLL_BOTTOM, wxScrollEventHandler( MyFrame1::Scrolls_Updated ), NULL, this );
 	WxSB_TranslationX->Disconnect( wxEVT_SCROLL_LINEUP, wxScrollEventHandler( MyFrame1::Scrolls_Updated ), NULL, this );

@@ -52,10 +52,12 @@ class MyFrame1 : public wxFrame
 		virtual void Scrolls_Updated( wxScrollEvent& event ) { event.Skip(); }
 		virtual void selectRender( wxCommandEvent& event ) { event.Skip(); }
 		virtual void selectPersp( wxCommandEvent& event ) { event.Skip(); }
+		virtual void screenshot( wxCommandEvent& event ) { event.Skip(); }
 	
 	public:
 		wxPanel* WxPanel;
 		wxButton* m_button_load_geometry;
+		wxButton* m_button_screenshot;
 		wxSlider* WxSB_TranslationX;
 		wxStaticText* WxST_TranslationX;
 		wxSlider* WxSB_TranslationY;

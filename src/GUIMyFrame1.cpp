@@ -11,6 +11,23 @@
 #endif
 
 
+void GUIMyFrame1::screenshot( wxCommandEvent& event )
+{
+    //zapis do pliku
+    wxFileDialog saveFileDialog(this, "Choose a file", "", "", "PNG Files (*.png)|*.png|BMP Files (*.bmp)|*.bmp", wxFD_SAVE | wxFD_OVERWRITE_PROMPT);
+	if (saveFileDialog.ShowModal() == wxID_CANCEL) return;
+
+	wxImage screen(draw_target);
+	screen.AddHandler(new wxPNGHandler);
+
+	screen.SaveFile(saveFileDialog.GetPath());
+}
+
+
+
+
+
+
 void GUIMyFrame1::close( wxCloseEvent& event ) {d_ptr->Destroy(); Destroy();};
 
 GUIMyFrame1::GUIMyFrame1( wxWindow* parent )
@@ -271,6 +288,37 @@ void GUIMyFrame1::m_button_load_geometry_click( wxCommandEvent& event )
   }
 
 
+{
+bool isPlanar = true;
+double angle = atan2(_raw_data.front().Y(),_raw_data.front().X());
+for(auto & obj : _raw_data)
+{
+    if( fabs(atan2(obj.Y(),obj.X()) - angle) > 0.01) 
+    {
+        isPlanar = false;
+        break;
+    }
+}
+
+if(isPlanar)
+{
+    for(auto & obj : _raw_data)
+    {
+        double len = sqrt(pow(obj.X(),2) + pow(obj.Y(),2));
+        obj.data[0] = len * cos(angle);
+    }
+
+}
+
+
+}
+
+
+
+
+
+
+
 
 
 int width = d_ptr->DrawingPanel->GetSize().GetX();
@@ -284,7 +332,6 @@ for(auto & obj : _raw_data)
 }
 d_ptr->setValues(update);
 d_ptr->Refresh();
-
 
 
 prepareData(_raw_data,pow(WxSB_Quality->GetValue(),2) + 5);
@@ -535,7 +582,7 @@ else
 
 
 
-//TO DO - przygotowuje sie pod optymalizacje i zrownoleglenie
+
 class ImgDataHandler{
     public:
 ImgDataHandler(wxImage & image) : _data{image.GetData()}, _width{image.GetWidth()}, _height{image.GetHeight()} {};
@@ -631,7 +678,7 @@ if(x02[x02.size()/2].X() < x012[x012.size()/2].X())
 
 
 
-//bayraktar
+
 
 ImgDataHandler handle(dc);
 
@@ -689,7 +736,7 @@ for(auto & obj : line)
     if(0<= y && y < z_buff.size() && 0 <= x && x < z_buff[y].size() )//fabs(obj.Z() - z_buff[y][x]) < 0.01
     {
         #pragma omp critical (render)
-        if(obj.Z() > 0.1 && obj.Z() <= z_buff[y][x])
+        if(obj.Z() > 0.1 && obj.Z() <= z_buff[y][x] + 0.001)
         {
         z_buff[y][x] = obj.Z();
         //dc.DrawPoint(x,y);
@@ -762,11 +809,15 @@ for(std::vector<Triangle>::iterator obj = _data.begin(); obj < _data.end(); ++ob
 }
 
 //painter's algorithm
+
+if(simplified && isConvex) //gdy rozszerzony renderer z buforem Z to wtedy sortowanie jest zbedne
+{
 struct
 {
     bool operator()(const Triangle & obj1, const Triangle & obj2){return obj1.minZ() >= obj2.minZ();};
 } TrianglePolicy;
 std::stable_sort(data.begin(),data.end(),TrianglePolicy);
+}
 
 dc.SetBrush(*wxRED_BRUSH);
 
@@ -805,6 +856,7 @@ for(std::vector<Triangle>::iterator obj = data.begin(); obj < data.end(); ++obj)
 
 }
 if(!simplified || !isConvex) dc.DrawBitmap(wxBitmap(draw_target),wxPoint(0,0));
+else draw_target = render_target.ConvertToImage();
 
 
 // tu rysowac

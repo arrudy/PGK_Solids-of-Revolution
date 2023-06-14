@@ -38,6 +38,7 @@ class GUIMyFrame1 : public MyFrame1
 		void Scrolls_Updated( wxScrollEvent& event );
 		void selectRender( wxCommandEvent& event );
 		void selectPersp( wxCommandEvent& event );
+		void screenshot( wxCommandEvent& event );
 
 	public:
 		/** Constructor */
