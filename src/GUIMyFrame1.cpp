@@ -585,7 +585,7 @@ else
 
 class ImgDataHandler{
     public:
-ImgDataHandler(wxImage & image) : _data{image.GetData()}, _width{image.GetWidth()}, _height{image.GetHeight()} {};
+ImgDataHandler(wxImage & image) : _data{static_cast<unsigned char*>(image.GetData())}, _width{static_cast<size_t>(image.GetWidth())}, _height{static_cast<size_t>(image.GetHeight())} {};
 ImgDataHandler(ImgDataHandler & cp) : _width(cp._width), _height{cp._height}
 {
 _data = static_cast<unsigned char *>(malloc(_height*_width*3));
