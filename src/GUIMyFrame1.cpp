@@ -688,7 +688,7 @@ ImgDataHandler handle(dc);
 //dc.SetPen(wxPen(*wxRED,2));
 //dc.SetPen(*wxRED_PEN);
 #pragma omp parallel for
-for(size_t i = 0; i < x012.size(); ++i) //iteracja po pietrach
+for(size_t i = 0; i < std::min(x012.size(),x02.size()); ++i) //iteracja po pietrach
 {
     double a_z = (right[i].Z() - left[i].Z()) / (right[i].X() - left[i].X()); //interpolacja
     size_t y = right[i].Y();
@@ -814,7 +814,7 @@ if(simplified && isConvex) //gdy rozszerzony renderer z buforem Z to wtedy sorto
 {
 struct
 {
-    bool operator()(const Triangle & obj1, const Triangle & obj2){return obj1.minZ() >= obj2.minZ();};
+    bool operator()(const Triangle & obj1, const Triangle & obj2){return obj1.minZ() > obj2.minZ();};
 } TrianglePolicy;
 std::stable_sort(data.begin(),data.end(),TrianglePolicy);
 }
