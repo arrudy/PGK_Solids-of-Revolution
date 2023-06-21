@@ -180,7 +180,7 @@ void MyFrame::Draw() {
 	if ((m_choice1->GetSelection())) {
 		values.clear();
 
-		values.reserve(m_choice2->GetSelection() + 1);
+		values.resize(m_choice2->GetSelection() + 1);
 		int it = 0;
 		for (auto i = 0; i < (2 * m_choice2->GetSelection() + 2); i += 2) {
 			int x = wxAtoi(v[i]->GetValue());
