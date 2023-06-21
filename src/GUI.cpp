@@ -159,7 +159,7 @@ MyFrame1::MyFrame1( wxWindow* parent, wxWindowID id, const wxString& title, cons
 
 
 
-	m_staticText37 = new wxStaticText( this, wxID_ANY, _("Jakość"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText37 = new wxStaticText( this, wxID_ANY, _("Jako\u015B\u0107:"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText37->Wrap( -1 );
 	fgSizer1->Add( m_staticText37, 0, wxALL, 5 );
 	
