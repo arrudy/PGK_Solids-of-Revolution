@@ -800,7 +800,7 @@ for(std::vector<Triangle>::iterator obj = _data.begin(); obj < _data.end(); ++ob
     bool s1 = transformator(copy,w,h);
 
     //warunek s1 aplikuje sie tylko przy uproszczonym renderze
-    //warunek wektor normalny aplikuje sie tylko wtedy, gdy bryla nie jest wklesla
+    //warunek wektor normalny aplikuje sie tylko wtedy, gdy bryla nie jest wklesla —> USUNIĘTE
     if((simplified & !s1) continue;
     else
     {
