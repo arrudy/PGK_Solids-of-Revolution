@@ -665,6 +665,7 @@ if(x012.size()) x012.pop_back();
 std::vector<Vector4> x12 = marginY(tr._vert[1], tr._vert[2]);
 std::vector<Vector4> x02 = marginY(tr._vert[0], tr._vert[2]);
 x012.insert(x012.end(),x12.begin(),x12.end());
+if(x012.size()) x012.pop_back();
 
 std::vector<Vector4> & left = x012;
 std::vector<Vector4> & right = x02;
@@ -676,7 +677,7 @@ if(x02[x02.size()/2].X() < x012[x012.size()/2].X())
     std::swap(left,right);
 }
 
-
+//if(x02.size() != x012.size()) std::cout << "Not equal: " << x02.size() << " " << x012.size() << "\n";
 
 
 
@@ -801,7 +802,7 @@ for(std::vector<Triangle>::iterator obj = _data.begin(); obj < _data.end(); ++ob
 
     //warunek s1 aplikuje sie tylko przy uproszczonym renderze
     //warunek wektor normalny aplikuje sie tylko wtedy, gdy bryla nie jest wklesla
-    if((simplified & !s1) || ((!perspective && isConvex) && copy.normal().Z() < 0.)) continue;
+    if(simplified & !s1) continue;
     else
     {
         data.push_back(copy);
