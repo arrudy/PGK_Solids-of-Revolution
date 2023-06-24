@@ -207,7 +207,7 @@ namespace ColiderFunc
 {
 Vector4 intersect(LinEq line, LinEq side)
     {
-        double x_inter = (side.b-line.b)/(line.a-side.a);
+        long double x_inter = (side.b-line.b)/(line.a-side.a);
         return Vector4(x_inter,0., line.a*x_inter + line.b);
     }
 }

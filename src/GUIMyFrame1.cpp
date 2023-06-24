@@ -5,6 +5,7 @@
 #include <queue>
 #include <utility>
 #include <algorithm>
+#include <wx/wfstream.h>
 
 #ifndef PI
 #define PI (4.*atan(1.))
@@ -263,6 +264,31 @@ std::cout << "Size of _data: " << _data.size() << "\n";
 }
 
 
+void GUIMyFrame1::m_button_save_geometry_click( wxCommandEvent& event )
+{
+wxFileDialog WxSaveFileDialog(this, wxT("Save a file"), wxT(""), wxT(""), wxT("Geometry file (*.geo)|*.geo"), wxFD_SAVE | wxFD_OVERWRITE_PROMPT);
+
+if (WxSaveFileDialog.ShowModal() == wxID_CANCEL)
+        return;
+
+std::ofstream out(WxSaveFileDialog.GetPath().ToAscii());
+
+
+
+for(size_t i = 0; i < _raw_data.size(); ++i)
+{
+out << _raw_data[i].X() << " " << _raw_data[i].Y() << " " << _raw_data[i].Z();
+if(i < _raw_data.size()-1) out << "\n";
+}
+
+}
+
+
+
+
+
+
+
 void GUIMyFrame1::m_button_load_geometry_click( wxCommandEvent& event )
 {
  wxFileDialog WxOpenFileDialog(this, wxT("Choose a file"), wxT(""), wxT(""), wxT("Geometry file (*.geo)|*.geo"), wxFD_OPEN | wxFD_FILE_MUST_EXIST);
@@ -335,7 +361,7 @@ d_ptr->Refresh();
 
 
 prepareData(_raw_data,pow(WxSB_Quality->GetValue(),2) + 5);
- }
+}
 
 
 

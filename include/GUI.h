@@ -49,6 +49,7 @@ class MyFrame1 : public wxFrame
 		// Virtual event handlers, overide them in your derived class
 		virtual void WxPanel_Repaint( wxUpdateUIEvent& event ) { event.Skip(); }
 		virtual void m_button_load_geometry_click( wxCommandEvent& event ) { event.Skip(); }
+		virtual void m_button_save_geometry_click( wxCommandEvent& event ) { event.Skip(); }
 		virtual void Scrolls_Updated( wxScrollEvent& event ) { event.Skip(); }
 		virtual void selectRender( wxCommandEvent& event ) { event.Skip(); }
 		virtual void selectPersp( wxCommandEvent& event ) { event.Skip(); }
@@ -57,6 +58,7 @@ class MyFrame1 : public wxFrame
 	public:
 		wxPanel* WxPanel;
 		wxButton* m_button_load_geometry;
+		wxButton* m_button_save_geometry;
 		wxButton* m_button_screenshot;
 		wxSlider* WxSB_TranslationX;
 		wxStaticText* WxST_TranslationX;
