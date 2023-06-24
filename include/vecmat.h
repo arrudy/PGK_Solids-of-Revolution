@@ -70,8 +70,8 @@ Matrix4 matrix_viewport(double w, double h);
 namespace ColiderFunc{
 
 struct LinEq{
-    double a;
-    double b;
+    long double a;
+    long double b;
 
 
     LinEq(Vector4 v1, Vector4 v2)

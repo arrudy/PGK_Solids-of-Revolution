@@ -49,6 +49,7 @@ class MyFrame1 : public wxFrame
 		// Virtual event handlers, overide them in your derived class
 		virtual void WxPanel_Repaint( wxUpdateUIEvent& event ) { event.Skip(); }
 		virtual void m_button_load_geometry_click( wxCommandEvent& event ) { event.Skip(); }
+		virtual void m_button_save_geometry_click( wxCommandEvent& event ) { event.Skip(); }
 		virtual void Scrolls_Updated( wxScrollEvent& event ) { event.Skip(); }
 		virtual void selectRender( wxCommandEvent& event ) { event.Skip(); }
 		virtual void selectPersp( wxCommandEvent& event ) { event.Skip(); }
@@ -57,6 +58,7 @@ class MyFrame1 : public wxFrame
 	public:
 		wxPanel* WxPanel;
 		wxButton* m_button_load_geometry;
+		wxButton* m_button_save_geometry;
 		wxButton* m_button_screenshot;
 		wxSlider* WxSB_TranslationX;
 		wxStaticText* WxST_TranslationX;
@@ -82,7 +84,9 @@ class MyFrame1 : public wxFrame
 		wxSlider* WxSB_Quality;
 		wxStaticText* WxST_Quality;
 		
+
 		MyFrame1( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = _("Solids of Revolution"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 600,400 ), long style = wxDEFAULT_FRAME_STYLE|wxTAB_TRAVERSAL );
+
 		virtual void close( wxCloseEvent& event ) { event.Skip(); }
 		~MyFrame1();
 	

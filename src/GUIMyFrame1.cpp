@@ -5,6 +5,7 @@
 #include <queue>
 #include <utility>
 #include <algorithm>
+#include <wx/wfstream.h>
 
 #ifndef PI
 #define PI (4.*atan(1.))
@@ -263,6 +264,31 @@ std::cout << "Size of _data: " << _data.size() << "\n";
 }
 
 
+void GUIMyFrame1::m_button_save_geometry_click( wxCommandEvent& event )
+{
+wxFileDialog WxSaveFileDialog(this, wxT("Save a file"), wxT(""), wxT(""), wxT("Geometry file (*.geo)|*.geo"), wxFD_SAVE | wxFD_OVERWRITE_PROMPT);
+
+if (WxSaveFileDialog.ShowModal() == wxID_CANCEL)
+        return;
+
+std::ofstream out(WxSaveFileDialog.GetPath().ToAscii());
+
+
+
+for(size_t i = 0; i < _raw_data.size(); ++i)
+{
+out << _raw_data[i].X() << " " << _raw_data[i].Y() << " " << _raw_data[i].Z();
+if(i < _raw_data.size()-1) out << "\n";
+}
+
+}
+
+
+
+
+
+
+
 void GUIMyFrame1::m_button_load_geometry_click( wxCommandEvent& event )
 {
  wxFileDialog WxOpenFileDialog(this, wxT("Choose a file"), wxT(""), wxT(""), wxT("Geometry file (*.geo)|*.geo"), wxFD_OPEN | wxFD_FILE_MUST_EXIST);
@@ -335,7 +361,7 @@ d_ptr->Refresh();
 
 
 prepareData(_raw_data,pow(WxSB_Quality->GetValue(),2) + 5);
- }
+}
 
 
 
@@ -665,6 +691,7 @@ if(x012.size()) x012.pop_back();
 std::vector<Vector4> x12 = marginY(tr._vert[1], tr._vert[2]);
 std::vector<Vector4> x02 = marginY(tr._vert[0], tr._vert[2]);
 x012.insert(x012.end(),x12.begin(),x12.end());
+if(x012.size()) x012.pop_back();
 
 std::vector<Vector4> & left = x012;
 std::vector<Vector4> & right = x02;
@@ -676,7 +703,7 @@ if(x02[x02.size()/2].X() < x012[x012.size()/2].X())
     std::swap(left,right);
 }
 
-
+//if(x02.size() != x012.size()) std::cout << "Not equal: " << x02.size() << " " << x012.size() << "\n";
 
 
 
@@ -800,8 +827,7 @@ for(std::vector<Triangle>::iterator obj = _data.begin(); obj < _data.end(); ++ob
     bool s1 = transformator(copy,w,h);
 
     //warunek s1 aplikuje sie tylko przy uproszczonym renderze
-    //warunek wektor normalny aplikuje sie tylko wtedy, gdy bryla nie jest wklesla —> USUNIĘTE
-    if((simplified & !s1) continue;
+    if(simplified & !s1) continue;
     else
     {
         data.push_back(copy);

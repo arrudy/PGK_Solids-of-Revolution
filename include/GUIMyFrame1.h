@@ -35,6 +35,7 @@ class GUIMyFrame1 : public MyFrame1
 		// Handlers for MyFrame1 events.
 		void WxPanel_Repaint( wxUpdateUIEvent& event );
 		void m_button_load_geometry_click( wxCommandEvent& event );
+		void m_button_save_geometry_click( wxCommandEvent& event );
 		void Scrolls_Updated( wxScrollEvent& event );
 		void selectRender( wxCommandEvent& event );
 		void selectPersp( wxCommandEvent& event );
@@ -46,7 +47,11 @@ class GUIMyFrame1 : public MyFrame1
 		void close( wxCloseEvent& event );
 	//// end generated class members
 
-	void setData(std::vector<Vector4> vec) {_raw_data = vec;prepareData(vec,pow(WxSB_Quality->GetValue(),2) + 5); Refresh();};
+	void setData(std::vector<Vector4> vec) 
+	{
+		_raw_data = vec;prepareData(vec,pow(WxSB_Quality->GetValue(),2) + 5);
+		 Refresh();
+		 };
 	void set_d_ptr(MyFrame * ptr) {d_ptr = ptr;};
 
 

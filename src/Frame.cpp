@@ -140,6 +140,7 @@ void MyFrame::render(wxCommandEvent& WXUNUSED(a)) {
 	{
 		data.push_back(Vector4(static_cast<double>(obj.x) / ref_width, 0, static_cast<double>(obj.y) / ref_height));
 	}
+	m_ptr->Show(true);
 	m_ptr->setData(data);
 }
 
@@ -179,8 +180,9 @@ void MyFrame::Draw() {
 	Drawing->DrawLine(DrawingPanel->GetSize().x / 2 -5, 0, DrawingPanel->GetSize().x / 2 -10, 5);
 	if ((m_choice1->GetSelection())) {
 		values.clear();
-
 		values.resize(m_choice2->GetSelection() + 1);
+
+
 		int it = 0;
 		for (auto i = 0; i < (2 * m_choice2->GetSelection() + 2); i += 2) {
 			int x = wxAtoi(v[i]->GetValue());
