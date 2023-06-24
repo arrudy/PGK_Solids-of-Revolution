@@ -176,11 +176,11 @@ MyFrame1::MyFrame1( wxWindow* parent, wxWindowID id, const wxString& title, cons
 	fgSizer1->Add( WxST_Quality, 0, wxALL, 5 );
 
 
-	m_checkBoxRender = new wxCheckBox( this, wxID_ANY, wxT("Simplified renderer"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_checkBoxRender = new wxCheckBox( this, wxID_ANY, wxT("Uproszczony renderer"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_checkBoxRender->SetValue(true);
 	fgSizer1->Add( m_checkBoxRender, 0, wxALL, 5 );
 
-	m_checkBoxPersp = new wxCheckBox( this, wxID_ANY, wxT("Perspective"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_checkBoxPersp = new wxCheckBox( this, wxID_ANY, wxT("Rzut perspektywistyczny"), wxDefaultPosition, wxDefaultSize, 0 );
 	fgSizer1->Add( m_checkBoxPersp, 0, wxALL, 5 );
 
 
