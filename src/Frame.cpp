@@ -40,7 +40,7 @@ MyFrame::MyFrame(wxWindow* parent, wxWindowID id, const wxString& title, const w
 	Render = new wxButton(this, ID_RENDERBUTTON, wxT("Render"), wxDefaultPosition, wxDefaultSize, 0);
 	MenuSize->Add(Render, 0, wxALIGN_CENTER | wxALL, 5);
 
-	m_staticText1 = new wxStaticText(this, wxID_ANY, wxT("Number of points"), wxDefaultPosition, wxDefaultSize, 0);
+	m_staticText1 = new wxStaticText(this, wxID_ANY, wxT("Liczba punkt\u00F3w"), wxDefaultPosition, wxDefaultSize, 0);
 	m_staticText1->Wrap(-1);
 	MenuSize->Add(m_staticText1, 0, wxALIGN_CENTER | wxALL, 5);
 
@@ -50,11 +50,11 @@ MyFrame::MyFrame(wxWindow* parent, wxWindowID id, const wxString& title, const w
 	m_choice2->SetSelection(9);
 	MenuSize->Add(m_choice2, 0, wxALIGN_CENTER | wxALL, 0);
 
-	m_staticText2 = new wxStaticText(this, wxID_ANY, wxT("Method of adding points"), wxDefaultPosition, wxDefaultSize, 0);
+	m_staticText2 = new wxStaticText(this, wxID_ANY, wxT("Metoda dodawania punkt\u00F3w"), wxDefaultPosition, wxDefaultSize, 0);
 	m_staticText2->Wrap(-1);
 	MenuSize->Add(m_staticText2, 0, wxALIGN_CENTER | wxALL, 5);
 
-	wxString m_choice1Choices[] = { wxT("Draw"), wxT("Write") };
+	wxString m_choice1Choices[] = { wxT("Rysuj"), wxT("Wpisz") };
 	int m_choice1NChoices = sizeof(m_choice1Choices) / sizeof(wxString);
 	m_choice1 = new wxChoice(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, m_choice1NChoices, m_choice1Choices, 0);
 	m_choice1->SetSelection(0);
@@ -65,10 +65,10 @@ MyFrame::MyFrame(wxWindow* parent, wxWindowID id, const wxString& title, const w
 	int n = m_choice2->GetSelection() + 1;
 	for (auto i = 0; i < 2 * n; ++i) {
 		if (!(i % 2)) {
-			v.push_back(new wxTextCtrl(this, wxID_ANY, std::string("point x number " + std::to_string(i / 2 + 1)), wxDefaultPosition, wxDefaultSize, 0));
+			v.push_back(new wxTextCtrl(this, wxID_ANY, std::string("Punkt x nr " + std::to_string(i / 2 + 1)), wxDefaultPosition, wxDefaultSize, 0));
 		}
 		else {
-			v.push_back(new wxTextCtrl(this, wxID_ANY, std::string("point y number " + std::to_string((i - 1) / 2 + 1)), wxDefaultPosition, wxDefaultSize, 0));
+			v.push_back(new wxTextCtrl(this, wxID_ANY, std::string("Punkt y nr " + std::to_string((i - 1) / 2 + 1)), wxDefaultPosition, wxDefaultSize, 0));
 		}
 		MenuSize->Add(v[i], 0, wxALIGN_CENTER | wxALL, 5);
 	}
@@ -124,8 +124,8 @@ void MyFrame::drawPoints(wxMouseEvent& a) {
 void MyFrame::reset(wxCommandEvent& WXUNUSED(a)) {
 	values.clear();
 	for (auto i = 0; i < v.size(); i += 2) {
-		v[i]->SetValue(std::string("point x number " + std::to_string(i / 2 + 1)));
-		v[i + 1]->SetValue(std::string("point y number " + std::to_string(i / 2 + 1)));
+		v[i]->SetValue(std::string("Punkt x nr " + std::to_string(i / 2 + 1)));
+		v[i + 1]->SetValue(std::string("Punkt y nr " + std::to_string(i / 2 + 1)));
 	}
 	editPoint = nullptr;
 }
@@ -150,8 +150,8 @@ void MyFrame::render(wxCommandEvent& WXUNUSED(a)) {
 void MyFrame::newChoice(wxCommandEvent& WXUNUSED(a)) {
 	values.clear();
 	for (auto i = 0; i < v.size(); i += 2) {
-		v[i]->SetValue(std::string("point x number " + std::to_string(i / 2 + 1)));
-		v[i + 1]->SetValue(std::string("point y number " + std::to_string(i / 2 + 1)));
+		v[i]->SetValue(std::string("Punkt x nr " + std::to_string(i / 2 + 1)));
+		v[i + 1]->SetValue(std::string("Punkt y nr " + std::to_string(i / 2 + 1)));
 	}
 }
 void MyFrame::Paint(wxPaintEvent& WXUNUSED(a)) {
@@ -182,7 +182,7 @@ void MyFrame::Draw() {
 		values.clear();
 		values.resize(m_choice2->GetSelection() + 1);
 
-		if(!values.size()) std::cout << m_choice2->GetSelection() + 1 << std::endl;
+
 		int it = 0;
 		for (auto i = 0; i < (2 * m_choice2->GetSelection() + 2); i += 2) {
 			int x = wxAtoi(v[i]->GetValue());
