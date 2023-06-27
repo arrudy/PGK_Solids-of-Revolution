@@ -61,12 +61,6 @@ void GUIMyFrame1::WxPanel_Repaint( wxUpdateUIEvent& event )
 void GUIMyFrame1::prepareData(std::vector<Vector4> & data, size_t quality = 21)
 {
 if(!data.size()) return;
-//zdecydowalem sie chwilowo na 2x liczenie tego samego (prev_v i curr_v) aby choc troche uproscic implementacje; na pewno da sie zoptymalizowac (czy jest po co?)
-//chyba wystarczy curr_v policzyc przed petla a potem w petli podmienic z prev, tam liczac curr
-//albo cos z petla do{}while pokombinowac
-//gdybym jeszcze to dorzucil to ten kod bylby calkowicie nieczytelny i niedebugowalny, wiec sie powstrzymalem
-
-//albo #pragma omp parallel for; wiecej liczenia ale pelne zrownoleglenie
 
 /*############
 ##############
@@ -262,6 +256,7 @@ for(size_t iter = 0; iter < 2*quality; ++iter)
 std::cout << "Size of _data: " << _data.size() << "\n";
 
 }
+
 
 
 void GUIMyFrame1::m_button_save_geometry_click( wxCommandEvent& event )
@@ -608,10 +603,24 @@ else
 
 
 
-
+/**
+ * @brief Klasa-handler dla obrazów wxImage
+ * 
+ */
 class ImgDataHandler{
     public:
+    /**
+     * @brief Construct a new Img Data Handler object
+     * 
+     * @param image Obraz, do którego powstaje handler.
+     */
 ImgDataHandler(wxImage & image) : _data{static_cast<unsigned char*>(image.GetData())}, _width{static_cast<size_t>(image.GetWidth())}, _height{static_cast<size_t>(image.GetHeight())} {};
+
+/**
+ * @brief Konstruktor kopiujący
+ * 
+ * @param cp Referencja do handle kopiowanego obrazu.
+ */
 ImgDataHandler(ImgDataHandler & cp) : _width(cp._width), _height{cp._height}
 {
 _data = static_cast<unsigned char *>(malloc(_height*_width*3));
@@ -620,15 +629,24 @@ std::copy(cp._data,cp._data+_height*_width*3,_data);
 
 
 
-
+/**
+ * @brief Operator dostępu do pixeli obrazu.
+ * 
+ * @param row Rząd pixeli.
+ * @param col Kolumna pixeli.
+ * @param color Index koloru pixela - format RGB
+ * @return unsigned char& 
+ */
 unsigned char & operator()(size_t row, size_t col, unsigned char color = 0)
 {
     return _data[row*_width*3 + col*3 + color];
 };
-
+/// @brief Wskaźnik na dane obrazu.
 unsigned char * _data;
 
+/// @brief Szerokość obrazka.
 size_t _width;
+/// @brief Wysokość obrazka.
 size_t _height;
 };
 
@@ -637,7 +655,7 @@ size_t _height;
 
 
 
-                                    //kopia trojkata!
+
 void drawTriangle( wxImage & dc, Triangle tr, std::vector<std::vector<double>> & z_buff)
 {
 struct
@@ -657,8 +675,6 @@ struct
         long y0 = begin.Y();
         std::vector<Vector4> result;
         //optymistycznie zakladam ze powierzchnia nie ma grubosci
-        //krotkowzroczne, bo rowniez aplikuje sie do linii :(
-        //ostatecznie, do wytyczenia linii wykorzystuje bresenham()
         if(a != a || a_z != a_z) return result; 
         else
         {
@@ -683,7 +699,8 @@ struct
 
 
 
-
+//wyznaczam lewe oraz prawe granice trojkata
+//nie wiem jednak jeszcze ktora jest lewa a ktora prawa
 
 
 std::vector<Vector4> x012 = marginY(tr._vert[0], tr._vert[1]);
@@ -693,11 +710,15 @@ std::vector<Vector4> x02 = marginY(tr._vert[0], tr._vert[2]);
 x012.insert(x012.end(),x12.begin(),x12.end());
 if(x012.size()) x012.pop_back();
 
+
+//optymistycznie zakladam strony
 std::vector<Vector4> & left = x012;
 std::vector<Vector4> & right = x02;
 
+
 if(x02.size() && x012.size())
 {
+    //jesli sie pomylilem, to zamieniam miejscami
 if(x02[x02.size()/2].X() < x012[x012.size()/2].X())
 {
     std::swap(left,right);
@@ -709,8 +730,7 @@ if(x02[x02.size()/2].X() < x012[x012.size()/2].X())
 
 ImgDataHandler handle(dc);
 
-//inner color
-//doing all the heavy lifting
+//rdzen algorytmu rysowania trojkata - wypelnienie
 
 //dc.SetPen(wxPen(*wxRED,2));
 //dc.SetPen(*wxRED_PEN);
@@ -729,7 +749,7 @@ for(size_t i = 0; i < std::min(x012.size(),x02.size()); ++i) //iteracja po pietr
             double z_height = a_z*(static_cast<double>(x) - left[i].X()) + left[i].Z();
 
             #pragma omp critical (render)
-            if(z_height < z_buff[y][x] && z_height > 0.1)
+            if(z_height < z_buff[y][x] && z_height > 0.1) //sprawdzam czy przyslania pixel oraz czy jest przed kamera
             {
                 //std::cout << x << ", " << y << "\n";
                 z_buff[y][x] = z_height;
@@ -754,7 +774,7 @@ for(size_t i = 0; i < std::min(x012.size(),x02.size()); ++i) //iteracja po pietr
 #pragma omp parallel for
 for(short l = 0; l < 3; ++l)
 {
-
+//wytyczam pixele linii do wyrysowania
 std::vector<Vector4> line = bresenham(tr._vert[l], tr._vert[ (l+1)%3 ]);
 
 for(auto & obj : line)
@@ -788,10 +808,10 @@ for(auto & obj : line)
 void GUIMyFrame1::Repaint()
 {
 wxClientDC dc1(WxPanel);
-draw_target = wxImage(WxPanel->GetSize()); //do tego rysujemy sposobem domowym
+draw_target = wxImage(WxPanel->GetSize()); //do tego rysuje recznie, implementacja wlasna
 
 
-wxBitmap render_target(draw_target); //do tego rysujemy dc.draw
+wxBitmap render_target(draw_target); //do tego rysujemy za pomoca funkcji biblioteki wxWidgets
  wxBufferedDC dc(&dc1,render_target);
  int w, h;
  WxPanel->GetSize(&w, &h);
@@ -804,7 +824,7 @@ std::vector<Triangle> data;
 
 std::vector<std::vector<double>> z_buffer(h);
 
-for(size_t i = 0; i < h; ++i)
+for(size_t i = 0; i < h; ++i) //inicjalizacja bufora z
 {
     std::vector<double> row(w);
     for(size_t j = 0; j < w; ++j)
@@ -827,7 +847,6 @@ for(std::vector<Triangle>::iterator obj = _data.begin(); obj < _data.end(); ++ob
     bool s1 = transformator(copy,w,h);
 
     //warunek s1 aplikuje sie tylko przy uproszczonym renderze
-    //warunek wektor normalny aplikuje sie tylko wtedy, gdy bryla nie jest wklesla
     if(simplified & !s1) continue;
     else
     {
@@ -857,7 +876,7 @@ for(std::vector<Triangle>::iterator obj = data.begin(); obj < data.end(); ++obj)
             //clipping!
             if(perspective) point = matrix_perspgl(0.15, h *0.15 / w, -0.1 , -100.) * point;
             //point = matrix_perspangular(w,h,0.1,100.) * point;
-            if(point.data[3]) for(int i = 0 ;i < 4; ++i) point.data[i] /= point.data[3];
+            if(point.data[3]) for(int i = 0 ;i < 4; ++i) point.data[i] /= point.data[3]; //normalizacja
             point = matrix_viewport(w,h) * point;
             
         }

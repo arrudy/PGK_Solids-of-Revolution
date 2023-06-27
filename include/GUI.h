@@ -46,7 +46,7 @@ class MyFrame1 : public wxFrame
 		wxCheckBox * m_checkBoxRender;
 		wxCheckBox * m_checkBoxPersp;
 		
-		// Virtual event handlers, overide them in your derived class
+
 		virtual void WxPanel_Repaint( wxUpdateUIEvent& event ) { event.Skip(); }
 		virtual void m_button_load_geometry_click( wxCommandEvent& event ) { event.Skip(); }
 		virtual void m_button_save_geometry_click( wxCommandEvent& event ) { event.Skip(); }

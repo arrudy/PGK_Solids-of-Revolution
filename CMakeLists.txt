@@ -60,8 +60,7 @@ elseif(${CMAKE_BUILD_TYPE} MATCHES Release)
     message("Release build.")
     set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/release)
 endif()
-
-
+set(EXE_PATH ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${PROJECT_NAME})
 
 
 set(HEADERS ${PROJECT_SOURCE_DIR}/include)
@@ -75,5 +74,32 @@ add_executable(${PROJECT_NAME} main.cpp ${SOURCES})
 target_link_libraries(${PROJECT_NAME} -static -fopenmp -lwinpthread -static-libgcc -static-libstdc++  wx::core wx::base wx::gl ${wxWidgets_LIBRARIES} -lm)
 target_include_directories(${PROJECT_NAME} PRIVATE ${INCL_DIR} )
 
-add_test(NAME launch COMMAND ./${PROJECT_NAME})
-# add_test(NAME leak COMMAND valgrind --leak-check=full --track-origins=yes --error-exitcode=1  ./${PROJECT_NAME})
+if(${CMAKE_BUILD_TYPE} MATCHES Debug)
+	if(WIN32)
+		add_test(NAME launch COMMAND ${EXE_PATH}.exe)
+		add_test(NAME leak COMMAND drmemory -exit_code_if_errors 1 -results_to_stderr -batch -- ${EXE_PATH}.exe)
+	elseif(UNIX)
+		add_test(NAME launch COMMAND ${EXE_PATH})
+		add_test(NAME leak COMMAND valgrind --leak-check=full --track-origins=yes --error-exitcode=1 ${EXE_PATH})
+	endif()
+endif()
+
+
+
+option(BUILD_DOXY_DOC "build doxygen documentation" ON)
+if(BUILD_DOXY_DOC)
+    find_package(Doxygen)
+    if(NOT DOXYGEN_FOUND)
+        message(WARNING "Doxygen not found, unable to generate documentation")
+    else()
+        set(DOXY_DOC_DEST_DIR ${CMAKE_BINARY_DIR} CACHE PATH "Path to the doxygen output")                      ## used in the doxyfile.in
+        set(DOXY_DOC_INPUT_ROOT_DIRS ${CMAKE_HOME_DIRECTORY} CACHE PATH "Path from where to start to parse")    ## used in the doxyfile.in
+        set(DOXY_DOC_EXCLUDE_PATTERNS_DIRS ${CMAKE_BINARY_DIR} CACHE STRING "Regex patterns exclusion")          ## used in the doxyfile.in
+        set(DOXY_DOC_COMMON_IMG_PATH ${CMAKE_CURRENT_SOURCE_DIR} CACHE PATH "Path from which doxygen will be able to found referenced images")## used in the doxyfile.in
+        configure_file(Doxyfile ${CMAKE_BINARY_DIR}/Doxyfile @ONLY)
+        add_custom_target(doxyDoc COMMAND ${DOXYGEN_EXECUTABLE} "${CMAKE_BINARY_DIR}/doxyfile"
+            WORKING_DIRECTORY ${CMAKE_HOME_DIRECTORY}
+            COMMENT "Building user's documentation into doxyDoc build dir..."
+        )
+    endif()
+endif()

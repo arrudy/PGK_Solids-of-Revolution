@@ -25,6 +25,11 @@ class MyFrame;
 class GUIMyFrame1 : public MyFrame1
 {
 	private:
+
+	/**
+	 * @brief Wskaznik na canvas.
+	 * 
+	 */
 		MyFrame * d_ptr;
 
 
@@ -34,41 +39,138 @@ class GUIMyFrame1 : public MyFrame1
 
 		// Handlers for MyFrame1 events.
 		void WxPanel_Repaint( wxUpdateUIEvent& event );
+
+
+		/**
+		 * @brief Obsługa wczytania geometrii z pliku.
+		 * 
+		 * @warning Nie dokonuje dogłebnego sprawdzenia rozszerzenia formatu pliku! 
+		 * Uznacza to, ze plik o rozszerzeniu np. .png może zostać wczytany.
+		 * 
+		 * @param event 
+		 */
 		void m_button_load_geometry_click( wxCommandEvent& event );
+
+
+
+		/**
+		 * @brief 
+		 * Obsługa zapisu geometrii do pliku.
+		 * 
+		 * @param event 
+		 */
 		void m_button_save_geometry_click( wxCommandEvent& event );
+
+		/**
+		 * @brief Reakcja na ruch suwaka.
+		 * 
+		 * Modyfikuje napisy na ekranie przy każdym z suwaków.
+		 * 
+		 * W przypadku modyfikacji wartości parametru "Jakość" automatycznie wymusza ponowną generację bryly.
+		 * 
+		 * @param event 
+		 */
 		void Scrolls_Updated( wxScrollEvent& event );
+
+		/**
+		 * @brief Reakcja na zmianę stanu checkbox'u wyboru renderera.
+		 * 
+		 * @param event 
+		 */
 		void selectRender( wxCommandEvent& event );
+		/**
+		 * @brief Reakcja na zmianę stanu checkbox'u wyboru rzutu perspektywicznego.
+		 * 
+		 * @param event 
+		 */
 		void selectPersp( wxCommandEvent& event );
+
+		/**
+		 * @brief Reakcja na przycisk "Screenshot"
+		 * 
+		 * Umożliwia zapis do pliku z pomocą wxFileDialog
+		 * 
+		 * @param event 
+		 */
 		void screenshot( wxCommandEvent& event );
 
 	public:
 		/** Constructor */
 		GUIMyFrame1( wxWindow* parent );
+
+		/**
+		 * @brief Odpowiada za sprzężone wyłączanie obu okien - renderer'a i canvas'u.
+		 * 
+		 * @param event 
+		 */
 		void close( wxCloseEvent& event );
 	//// end generated class members
 
+	/**
+	 * @brief Zmienia _raw_data i wymusza ponowne wygenerowanie mesh'u bryły.
+	 * 
+	 * @param vec std::vector wierzchołków połowy przekroju bryły.
+	 */
 	void setData(std::vector<Vector4> vec) 
 	{
 		_raw_data = vec;prepareData(vec,pow(WxSB_Quality->GetValue(),2) + 5);
 		 Refresh();
 		 };
+
+	/**
+	 * @brief Interfejs umożliwiający komunikację między oknami.
+	 * 
+	 * @param ptr Wskaźnik na drugie okno.
+	 */
 	void set_d_ptr(MyFrame * ptr) {d_ptr = ptr;};
 
 
-
+	/**
+	 * @brief Metoda rysujaca.
+	 * 
+	 */
   void Repaint();
+
+  /**
+   * @brief Metoda dokonująca transformacji każdego z punktów trójkąta.
+   * 
+   * @param triangle Referencja do modyfikowanego trójkąta.
+   * @param w Szerokość panelu w oknie renderer'a.
+   * @param h Wysokość panelu w oknie renderer'a.
+   * @return true Trójkąt znajduje się przed ekranem
+   * @return false Trójkąt przecina się z ekranem bądź jest za nim.
+   */
   bool transformator(Triangle & triangle, int w, int h);
 
-//data musi byc uporzadkowane pod katem kolejnosci linii tworzacych obrys przekroju bryly
-//quality odpowiada za to, ile lacznie punktow bedzie odpowiadac za przyblizenie okregu
+
+
+/**
+ * @brief Funkcja dokonujaca przekształcenia obrysu w bryłę.
+ * 
+ * @param data Uporządkowany std::vector punktów tworzący połowę obrysu przekroju bryły.
+ * @param quality Jakość przybliżenia algorytmu generujacego bryłę.
+ * 
+ * Przyklad:
+ * Dla n = 5 wieżchołków i parametru jakość = 21 łączna ilość trójkątów tworzących bryłę wyniesie n * 2 * jakość, czyli 210 trójkątów.
+ */
 	void prepareData(std::vector<Vector4> & data, size_t quality);
 
-	wxImage draw_target;
-	std::vector<Triangle> _data; //przenosi mesh
-	std::vector<Vector4> _raw_data; //przenosi punkty wyznaczajace ksztalt przekroju
 
+/**
+ * @brief Wykorzystywany obraz w recznym rysowaniu trojkatow.
+ * 
+ */
+	wxImage draw_target;
+	/// Przenosi mesh
+	std::vector<Triangle> _data; 
+	/// Przenosi punkty wyznaczające kształt przekroju
+	std::vector<Vector4> _raw_data; 
+
+	/// @brief Flaga rzutu perspektywicznego.
 	bool perspective = false;
+	/// @brief Flaga renderera uproszczonego.
 	bool simplified = true;
+	/// @brief Flaga wypoklosci bryły.
 	bool isConvex = false;
 
 

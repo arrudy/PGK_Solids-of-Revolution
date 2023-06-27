@@ -36,54 +36,68 @@ class MyFrame : public wxFrame
 public:
 	MyFrame(wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("Drawing Panel"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize(1200, 1200), long style = wxDEFAULT_FRAME_STYLE | wxTAB_TRAVERSAL);
 	~MyFrame();
-	//metoda zwracajaca wartosci punktow
+	///metoda zwracająca wartości punktow
 	std::vector<wxPoint>& getValues() {
 		return values;
 	}
+
+	/**
+	 * @brief Metoda nadpisania std::vector przekroju.
+	 * 
+	 * @param vec Nowy std::vector punktów reprezentujących przekrój.
+	 */
 	void setValues(std::vector<wxPoint> vec) {values = vec; editPoint = nullptr; m_choice2->SetSelection(vec.size()-1);};
 
 	void set_m_ptr(GUIMyFrame1 * ptr) {m_ptr = ptr;};
 
-		//panel do rysowania
+		///panel do rysowania
 	wxPanel* DrawingPanel;
 private:
-	//metoda resetuj�ca przy zmianie ilo�ci punkt�w
+	/// @brief Metoda resetująca przy zmianie ilości punktów.
 	void newChoice(wxCommandEvent& a);
 	void render(wxCommandEvent& a);
 	void Paint(wxPaintEvent& a);
 	void UpdateForm(wxUpdateUIEvent& a);
 	void Draw();
-	//metoda do przechowania w wektorze values punkt�w z myszki
+	/// @brief Metoda do przechowania w wektorze values punktów z myszki.
 	void drawPoints(wxMouseEvent& a);
-	//metoda resetuj�ca wszystkie pola
+	/// @brief Metoda resetująca wszystkie pola.
 	void reset(wxCommandEvent& a);
 	enum {
 		ID_RESETBUTTON = 1001,
 		ID_RENDERBUTTON = 1002
 	};
+	/**
+	 * @brief Wskaźnik na okno renderer'a.
+	 * 
+	 */
 	GUIMyFrame1 * m_ptr;
+	/**
+	 * @brief Metoda realizująca sprzężone wyłączenie obu okien programu.
+	 * 
+	 */
 	void close( wxCloseEvent& event );
 
 protected:
-	//tekst pierwszy
+	///tekst pierwszy
 	wxStaticText* m_staticText1;
-	//pierwszy pasek wyboru (ilosc punktow)
+	///pierwszy pasek wyboru (ilość punktow)
 	wxChoice* m_choice2;
-	//tekst drugi
+	///tekst drugi
 	wxStaticText* m_staticText2;
-	//drugi pasek wyboru
+	///drugi pasek wyboru
 	wxChoice* m_choice1;
-	//przycisk do resetowania
+	///przycisk do resetowania
 	wxButton* Reset;
-	//przycisk do renderowania
+	///przycisk do renderowania
 	wxButton* Render;
-	//wektor przechowujacy pola tekstowe na wpisywanie punkt�w
+	///wektor przechowujacy pola tekstowe na wpisywanie punktów
 	std::vector< wxTextCtrl*> v;
-	//wektor przechowujacy wartosci puntkow
+	///wektor przechowujacy wartości punktów
 	std::vector<wxPoint> values;
-	// buffer u�ywany do rysowania
+	///buffer używany do rysowania
 	wxBitmap Buffer;
-	
+	/// @brief Wskaźnik na edytowany punkt
 	wxPoint * editPoint = nullptr;
 };
 
