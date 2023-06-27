@@ -84,7 +84,9 @@ class MyFrame1 : public wxFrame
 		wxSlider* WxSB_Quality;
 		wxStaticText* WxST_Quality;
 		
-		MyFrame1( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = _("Renderer_008"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 600,400 ), long style = wxDEFAULT_FRAME_STYLE|wxTAB_TRAVERSAL );
+
+		MyFrame1( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = _("Solids of Revolution"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 600,400 ), long style = wxDEFAULT_FRAME_STYLE|wxTAB_TRAVERSAL );
+
 		virtual void close( wxCloseEvent& event ) { event.Skip(); }
 		~MyFrame1();
 	
