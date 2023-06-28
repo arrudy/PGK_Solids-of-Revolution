@@ -44,10 +44,10 @@ MyFrame::MyFrame(wxWindow* parent, wxWindowID id, const wxString& title, const w
 	m_staticText1->Wrap(-1);
 	MenuSize->Add(m_staticText1, 0, wxALIGN_CENTER | wxALL, 5);
 
-	wxString m_choice2Choices[] = { wxT("1"), wxT("2"), wxT("3"), wxT("4"), wxT("5"), wxT("6"), wxT("7"), wxT("8"), wxT("9"),wxT("10") };
+	wxString m_choice2Choices[] = { wxT("2"), wxT("3"), wxT("4"), wxT("5"), wxT("6"), wxT("7"), wxT("8"), wxT("9"),wxT("10") };
 	int m_choice2NChoices = sizeof(m_choice2Choices) / sizeof(wxString);
 	m_choice2 = new wxChoice(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, m_choice2NChoices, m_choice2Choices, 0);
-	m_choice2->SetSelection(9);
+	m_choice2->SetSelection(8);
 	MenuSize->Add(m_choice2, 0, wxALIGN_CENTER | wxALL, 0);
 
 	m_staticText2 = new wxStaticText(this, wxID_ANY, wxT("Metoda dodawania punkt\u00F3w"), wxDefaultPosition, wxDefaultSize, 0);
@@ -62,7 +62,7 @@ MyFrame::MyFrame(wxWindow* parent, wxWindowID id, const wxString& title, const w
 
 
 	//tutaj stworzenie ilo�ci miejsc na wpisywanie punktow mia�o by� dynamicznioe dlatego wektor ale ostatecznie zosta�o statyczne 10 punktow osobo wartosc X osobno Y
-	int n = m_choice2->GetSelection() + 1;
+	int n = m_choice2->GetSelection() + 2;
 	for (auto i = 0; i < 2 * n; ++i) {
 		if (!(i % 2)) {
 			v.push_back(new wxTextCtrl(this, wxID_ANY, std::string("Punkt x nr " + std::to_string(i / 2 + 1)), wxDefaultPosition, wxDefaultSize, 0));
@@ -93,7 +93,7 @@ MyFrame::MyFrame(wxWindow* parent, wxWindowID id, const wxString& title, const w
 }
 
 void MyFrame::drawPoints(wxMouseEvent& a) {
-	if (values.size() < m_choice2->GetSelection() + 1) {
+	if (values.size() < m_choice2->GetSelection() + 2) {
 		wxPoint help(a.GetPosition());
 		values.push_back(wxPoint(help.x - DrawingPanel->GetSize().x / 2, help.y - DrawingPanel->GetSize().y / 2));
 		/*wxString message = wxString::Format("Mouse detected x=%d y =%d", help.x - DrawingPanel->GetSize().x / 2, help.y - DrawingPanel->GetSize().y / 2);
@@ -180,11 +180,11 @@ void MyFrame::Draw() {
 	Drawing->DrawLine(DrawingPanel->GetSize().x / 2 -5, 0, DrawingPanel->GetSize().x / 2 -10, 5);
 	if ((m_choice1->GetSelection())) {
 		values.clear();
-		values.resize(m_choice2->GetSelection() + 1);
+		values.resize(m_choice2->GetSelection() + 2);
 
 
 		int it = 0;
-		for (auto i = 0; i < (2 * m_choice2->GetSelection() + 2); i += 2) {
+		for (auto i = 0; i < (2 * m_choice2->GetSelection() + 4); i += 2) {
 			int x = wxAtoi(v[i]->GetValue());
 			int y = wxAtoi(v[i + 1]->GetValue());
 			Drawing->DrawCircle(wxPoint(x, y), 2);
@@ -196,7 +196,7 @@ void MyFrame::Draw() {
 		}
 		wxString message = wxString::Format("Mouse detected x=%d y =%d", values[0].x, values[0].y);
 		wxLogStatus(message);
-		Drawing->DrawLine(wxPoint(wxAtoi(v[0]->GetValue()), wxAtoi(v[1]->GetValue())), wxPoint(wxAtoi(v[(2 * m_choice2->GetSelection() + 2) - 2]->GetValue()), wxAtoi(v[(2 * m_choice2->GetSelection() + 2) - 1]->GetValue())));
+		Drawing->DrawLine(wxPoint(wxAtoi(v[0]->GetValue()), wxAtoi(v[1]->GetValue())), wxPoint(wxAtoi(v[(2 * m_choice2->GetSelection() + 4) - 2]->GetValue()), wxAtoi(v[(2 * m_choice2->GetSelection() + 4) - 1]->GetValue())));
 	}
 	else {
 
