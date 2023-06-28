@@ -70,7 +70,7 @@ if(!data.size()) return;
 
 isConvex = true;
 //sprawdzam czy bryla jest wypokla
-//koncept back_4
+
 {
     double minx = data[0].X(), maxx = data[0].X();
     for(size_t row = 0; row < data.size() ; ++row)
@@ -82,7 +82,7 @@ isConvex = true;
     double x_end = data[row_curr].X();
     if(x_begin > x_end) std::swap(x_begin,x_end);
 
-    for(size_t another = row+1; another < data.size()-2; ++another) //koncept back_4
+    for(size_t another = row+1; another < data.size()-2; ++another) 
     {
         size_t an_prev = (another+1) % (data.size());
         size_t an_curr = (another+2) % (data.size());
@@ -147,9 +147,9 @@ for(size_t row = 0; row < data.size() ; ++row) // krawedzi jest n, scian jest n
 size_t prev = row;
 size_t curr = (row+1) % (data.size()); //celuje w nastepny; potrzebuje dwa rozne rzedy ponktow do obliczen. Modulo, bo zapetla sie na koniec by utworzyc ostatnia powierzchnie
 
-double delta_angle = 2.*PI / quality; //koncept back_1; to jest w radianach offset miedzy kolejnymi punktami na okregu, ktory jest tworzony
+double delta_angle = 2.*PI / quality; // to jest w radianach offset miedzy kolejnymi punktami na okregu, ktory jest tworzony
 
-//offset procesowanego rzedu - koncept back_2 lewo gora
+//offset procesowanego rzedu
 //istotne aby operowalo na wlasciwym ID okregu, jesli ma sie prawidlowo stykac z poczatkiem
 double prev_degree_offset = (prev %2 ? 0. : delta_angle / 2.); //prev ma offset jesli jest parzysty
 double curr_degree_offset = (curr %2 ? 0. : delta_angle / 2.); //curr ma offset jesli jest nieparzysty
@@ -174,12 +174,12 @@ for(size_t i = 0; i < quality; ++i)
 
 
 
-//koncept back_2
+
 //musi byc wskaznik; dla referencji calkowicie sie psuje
 std::vector<std::pair<std::vector<Vector4> *, std::vector<Vector4>::iterator>> queue;
 
 //istotne jest w jaki sposob preparujemy kolejke; w ten sposob narzucamy czesciowo ksztalt trojkatow
-//wymuszamy tez kierunek normalnej dla pierwszego trojkata (koncept back_3)
+//wymuszamy tez kierunek normalnej dla pierwszego trojkata
 if(!(curr % 2)) //curr ma offset
 {
     queue.push_back(std::pair<std::vector<Vector4> *, std::vector<Vector4>::iterator>(&prev_v,prev_v.begin()));
@@ -212,10 +212,10 @@ auto loop_iterate = []( const std::pair<std::vector<Vector4> *, std::vector<Vect
 ##############
 ############*/
 
-//koncept back_2
+
 for(size_t iter = 0; iter < 2*quality; ++iter)
 {
-    //rdzen generatora; generowanie trojkatow w oparciu o kolejke FIFO z uwzglednieniem kierunku normalnej i przesuniecia rzedu (pierwszy if-else w petli for) (koncept back_3)
+    //rdzen generatora; generowanie trojkatow w oparciu o kolejke FIFO z uwzglednieniem kierunku normalnej i przesuniecia rzedu (pierwszy if-else w petli for) 
     //if((iter%2)) //w wariancie uproszczonym, gdy nie robimy przesuniecia rzedow
     if((iter%2) ^ (curr%2)) //warianty pelny
     {

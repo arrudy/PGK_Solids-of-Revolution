@@ -27,7 +27,7 @@ class GUIMyFrame1 : public MyFrame1
 	private:
 
 	/**
-	 * @brief Wskaznik na canvas.
+	 * @brief Wskaźnik na okno canvas'u.
 	 * 
 	 */
 		MyFrame * d_ptr;
@@ -44,8 +44,8 @@ class GUIMyFrame1 : public MyFrame1
 		/**
 		 * @brief Obsługa wczytania geometrii z pliku.
 		 * 
-		 * @warning Nie dokonuje dogłebnego sprawdzenia rozszerzenia formatu pliku! 
-		 * Uznacza to, ze plik o rozszerzeniu np. .png może zostać wczytany.
+		 * @warning Nie dokonuje dogłębnego sprawdzenia rozszerzenia formatu pliku! 
+		 * Uznacza to, że plik o rozszerzeniu np. .png może zostać wczytany.
 		 * 
 		 * @param event 
 		 */
@@ -66,7 +66,7 @@ class GUIMyFrame1 : public MyFrame1
 		 * 
 		 * Modyfikuje napisy na ekranie przy każdym z suwaków.
 		 * 
-		 * W przypadku modyfikacji wartości parametru "Jakość" automatycznie wymusza ponowną generację bryly.
+		 * W przypadku modyfikacji wartości parametru "Jakość" automatycznie wymusza ponowną generację bryły.
 		 * 
 		 * @param event 
 		 */
